@@ -1,0 +1,29 @@
+<td>
+    <div class="table-c-other">{{topic.ID}}</div>
+</td>
+<td>
+    <!--<div class="table-c-img" style={{listShowImg}}></div>-->
+  {{#img-loader classNames="table-c-img" original=listShowImg tagName="div"}}{{/img-loader}}
+</td>
+<td>
+    <div class="table-c-content">
+        <h1>
+            <a href="javascript:;"
+               target="_blank">{{topic.Title}}</a>
+        </h1>
+        <h2>
+          {{topic.Brife}}
+        </h2>
+    </div>
+</td>
+<td>
+    <div class="table-c-other">
+      {{topic.CategoryName}}
+    </div>
+</td>
+<td>
+    <div class="table-c-other">{{topic.Time}}</div>
+</td>
+<td>
+  {{yield}}
+</td>

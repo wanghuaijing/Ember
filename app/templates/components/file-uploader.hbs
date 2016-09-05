@@ -1,0 +1,8 @@
+{{#modal-dialog fade=true width="500px" show=show title="上传图片"}}
+  {{#file-picker percent=uploadPercent imgSrc=imgSrc multiple=multiple onFileChange=(action "upload")}}{{/file-picker}}
+  <p class="text-caution">
+      <i class="fa fa-info-circle"></i>
+      如果选择了图片没有反应,请确认你选择的是和上次不一样的图片<p></p>上传完成前请不要关闭此窗口。
+  </p>
+{{/modal-dialog}}
+{{yield}}

@@ -1,0 +1,10 @@
+{{#each listData as |list|}}
+    <select class="form-control" data-index={{list.index}}
+            onchange={{action "listChange" list.index}} >
+        <option value=0>分类名</option>
+        {{#each list.data as |item|}}
+            <option value={{item.CategoryID}}>{{item.CategoryName}}</option>
+        {{/each}}
+    </select>
+{{/each}}
+

@@ -1,0 +1,40 @@
+{{input type="text" value=dateValue class="form-control datepicker-input" placeholder=placeholder}}
+<span class="icon fa fa-calendar"></span>
+{{#drop-menu onOpen=(action "pickerOpen")}}
+    <div onclick={{action "cancelPropagation"}} class="date-picker-container">
+        <div class="date-picker-header">
+            <div class="year"><span onclick={{action "addYear" 1}} class="arrow-up"></span>{{currentYear}}<span
+                    class="arrow-down" onclick={{action "addYear" -1}} ></span></div>
+            年
+            <div class="month"><span onclick={{action "addMonth" 1}} class="arrow-up"></span>{{currentMonth}}<span
+                    onclick={{action "addMonth" -1}} class="arrow-down"></span></div>
+            月
+        </div>
+        <table class="date-picker-date-chooser">
+            <thead>
+            <tr>
+                <th>日</th>
+                <th>一</th>
+                <th>二</th>
+                <th>三</th>
+                <th>四</th>
+                <th>五</th>
+                <th>六</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each showDates as |week|}}
+                <tr>
+                  {{#each week as |date|}}
+                      <td onclick={{action "dateTimeChange" date.timeStamp}}
+                                  class="{{unless date.thisMonth 'fade'}} {{if date.active "active"}}">
+                          <div>{{date.text}}</div>
+                      </td>
+                  {{/each}}
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+{{/drop-menu}}
+{{yield}}

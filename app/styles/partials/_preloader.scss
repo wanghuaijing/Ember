@@ -1,0 +1,79 @@
+/**
+ * pre-loader style
+ * styles:wp
+ * colors:color-collection
+ */
+
+.preloader {
+  position: relative;
+  overflow: hidden;
+  &.wp {
+    text-align: center;
+    .lo {
+      display: inline-block;
+      margin: 0 5px;
+      width: 10px;
+      height: 10px;
+      background-color: $color-grey;
+      @include border-radius(50%);
+      @include animation(wp-point-move 5s linear infinite both);
+      @each $item in (1, 2, 3, 4, 5) {
+        &:nth-of-type(#{$item}) {
+          @include animation-delay(.14s *(5-$item));
+        }
+      }
+    }
+
+    &.bigger {
+      .lo {
+        height: 15px;
+        width: 15px;
+      }
+    }
+
+    &.smaller {
+      .lo {
+        height: 7px;
+        width: 7px;
+      }
+    }
+
+    @each $name, $color in $color-collection {
+      &.preloader-#{$name} {
+        .lo {
+          background-color: $color
+        }
+      }
+    }
+  }
+}
+
+@include keyframes(wp-point-move) {
+  0% {
+    opacity: .2;
+    @include translate3d(-10000%, 0, 0);
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  20% {
+    opacity: 1;
+    @include translate3d(-1000%, 0, 0);
+  }
+
+  80% {
+    opacity: 1;
+    @include translate3d(1000%, 0, 0);
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: .2;
+    @include translate3d(10000%, 0, 0);
+  }
+}

@@ -1,0 +1,249 @@
+<div class="site-path"><a href="javascript:;">生活圈管理</a><span class="split"></span>帖子列表</div>
+<div class="entrance slide-in-down">
+    <div class="toolbar">
+        <div class="form-group form-inline">
+            <label class="form-label">关键字:</label>
+          {{input type="text" value=searchParams.q class="form-control" placeholder="请输入标题或正文内容"}}
+        </div>
+        <div class="form-group form-inline">
+            <label class="form-label">发帖人:</label>
+          {{input type="text"  value=searchParams.nick class="form-control" placeholder="请输入用户名"}}
+        </div>
+        <div class="form-group form-inline">
+            <label class="form-label">帖子类型:</label>
+            <select class="form-control" onchange={{action "categoryChange" value="target.value"}}>
+              {{#each model.Data as |item|}}
+                {{#if (eq item.ID categoryID)}}
+                    <option value="{{item.ID}}" selected="selected">{{item.Name}}</option>
+                {{else}}
+                    <option value="{{item.ID}}">{{item.Name}}</option>
+                {{/if}}
+              {{/each}}
+            </select>
+        </div>
+        <button class="button button-theme" {{action "search"}}>查询</button>
+      {{#if totalCount}}
+          <p class="text-theme">共查询到{{totalCount}}条结果:</p>
+      {{/if}}
+      {{#if hasPostNew}}
+          <p class="text-info"><i class="fa fa-info-circle"></i>您刚刚发布了一个新的帖子,请刷新</p>
+      {{/if}}
+    </div>
+
+  {{#pre-loader color="theme" visible=isLoading}}{{/pre-loader}}
+
+  {{#if dataList}}
+      <table class="table table-block table-theme">
+          <thead>
+          <tr>
+              <th>帖子ID</th>
+              <th>标题</th>
+              <th>发帖人</th>
+              <th>是否匿名</th>
+              <th>发帖时间</th>
+              <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each dataList as |thread|}}
+              <tr>
+                  <td class="text-center">{{thread.ID}}</td>
+                  <td>
+                    {{#unless thread.Title}}
+                        <span class="text-info">标题无内容</span>
+                    {{else}}
+                      {{thread.Title}}
+                    {{/unless}}
+                  </td>
+                  <td class="text-center">
+                    {{#if thread.UName }}
+                        <span {{action "toggleWatchingUserInfoDialog" true thread}}
+                                class="cursor-pointer">{{thread.UName}}</span>
+                    {{else}}
+                        <span {{action "toggleWatchingUserInfoDialog" true thread}}
+                                class="cursor-pointer text-caution">未设置昵称</span>
+                    {{/if}}
+                  </td>
+                  <td class="text-center">
+                    {{#if thread.IsAnonymous}}
+                        <span class="text-danger">是</span>
+                    {{else}}
+                        否
+                    {{/if}}
+                  </td>
+                  <td class="text-center">{{thread.Time}}</td>
+                  <td class="text-center no-wrap">
+                      <button class="button button-primary" {{action "toggleThreadDetailDialog" true thread}}><i
+                              class="fa fa-eye"></i></button>
+                      <button class="button button-danger" {{action "toggleThreadDeleteDialog" true thread}}><i
+                              class="fa fa-trash"></i></button>
+                  </td>
+              </tr>
+          {{/each}}
+          </tbody>
+      </table>
+  {{else}}
+    {{#unless isLoading}}
+        <p>未查询或没有查询到结果</p>
+    {{/unless}}
+  {{/if}}
+
+
+  {{#if totalPage}}
+      <div class="site-body-footer text-center">
+        {{#pagination-view classNames="pagination-theme" current=currentPage total=totalPage onChange=(action "pageChange")}}{{/pagination-view}}
+      </div>
+  {{/if}}
+
+  {{#modal-dialog fade=true width="350px" show=showThreadDeleteDialog title="删除帖子"}}
+    {{#unless threadToDelete.Title}}
+        <span style="font-size: 16px;" class="text-info">标题无内容</span>
+    {{else}}
+        <span style="font-size: 16px;" class="text-danger">{{threadToDelete.Title}}</span>
+    {{/unless}}
+      <p></p>
+      请填写原因:
+    {{textarea value=deleteReason class="form-control form-control-block" rows=4}}
+      <p>
+          快捷输入:
+          <span class="cursor-pointer text-info"
+                onclick={{action "setDeleteReason" value="target.innerText"}}>广告贴</span>
+          <span class="cursor-pointer text-info"
+                onclick={{action "setDeleteReason" value="target.innerText"}}>政治反动</span>
+          <span class="cursor-pointer text-info"
+                onclick={{action "setDeleteReason" value="target.innerText"}}>垃圾帖水贴</span>
+          <span class="cursor-pointer text-info"
+                onclick={{action "setDeleteReason" value="target.innerText"}}>色情暴力不和谐</span>
+          <span class="cursor-pointer text-info"
+                onclick={{action "setDeleteReason" value="target.innerText"}}>恶意辱骂攻击他人</span>
+          <span class="cursor-pointer text-info"
+                onclick={{action "setDeleteReason" value="target.innerText"}}>我看不顺眼</span>
+      </p>
+      <button class="button button-danger" {{action "deleteThread"}}>
+        {{#if isThreadDeleting}}
+            <i class="fa fa-spinner fa-spin"></i>
+        {{else}}
+            确认删除
+        {{/if}}
+      </button>
+      <input type="button" class="button" value="取消" {{action "toggleThreadDeleteDialog" false}}>
+  {{/modal-dialog}}
+
+  {{#modal-dialog title="用户信息" show=showWatchingUserInfoDialog fade=true width="500px;"}}
+    {{#pre-loader color="theme" visible=isWatchingUserInfoLoading}}{{/pre-loader}}
+    {{#if watchingUserInfo}}
+        <table class="form-table">
+            <tr>
+                <td class="label">
+                    账号:
+                </td>
+                <td>
+                  {{watchingUserInfo.Name}}
+                    <span class="text-info"><i class="fa fa-paw"></i> {{watchingUserInfo.RegTime}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    头像:
+                </td>
+                <td>
+                  {{#if watchingUserInfo.PhotoUrl}}
+                    {{img-loader original=watchingUserAvatarUrl classNames="thumb thumb-x2" tagName="div"}}
+                  {{else}}
+                      未设置
+                  {{/if}}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">
+                    昵称:
+                </td>
+                <td>
+                  {{if watchingUserInfo.NickName watchingUserInfo.NickName "未设置"}}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    性别:
+                </td>
+                <td>
+                  {{if watchingUserInfo.Gender "男"  "女"}}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    生日:
+                </td>
+                <td>
+                  {{if watchingUserInfo.Birthday watchingUserInfo.Birthday "未设置"}}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    身高:
+                </td>
+                <td>
+                  {{if watchingUserInfo.Height watchingUserInfo.Height  "未设置"}}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    体重:
+                </td>
+                <td>
+                  {{if watchingUserInfo.Width watchingUserInfo.Width  "未设置"}}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    地址:
+                </td>
+                <td>
+                  {{if watchingUserInfo.Area watchingUserInfo.Area  "未设置"}}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    经验值:
+                </td>
+                <td>
+                  {{if watchingUserInfo.Exp watchingUserInfo.Exp  "0"}}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    个性签名:
+                </td>
+                <td>
+                  {{if watchingUserInfo.Sign watchingUserInfo.Sign  "未设置"}}
+                </td>
+            </tr>
+        </table>
+    {{/if}}
+  {{/modal-dialog}}
+
+  {{#modal-dialog fade=true title="帖子详情" show=showThreadDetailDialog width="500px;"}}
+    {{#pre-loader color="theme" visible=isThreadDetailLoading}}{{/pre-loader}}
+    {{#if threadDetailData}}
+        <h4 class="text-caution">{{threadDetailData.Title}}</h4>
+        <p class="text-grey"><span class="text-theme">{{threadDetailData.UName}}</span>
+            发表于:
+          {{threadDetailData.Time}}
+            <span class="">
+            <i class="fa fa-commenting-o"></i>
+              {{threadDetailData.CommentCnt}}
+        </span>
+        </p>
+        <p class="emoji-content">{{{threadDetailData.MediaContent}}}</p>
+    {{/if}}
+    {{#if threadDetailImages}}
+      {{#each threadDetailImages as |imgSrc|}}
+          <span style="margin-bottom: 5px;display: inline-block;font-size: 16px;">
+            {{img-loader original=imgSrc classNames="thumb thumb-x2" tagName="div" onClick=(action "showFullImage" imgSrc)}}
+          </span>
+      {{/each}}
+    {{/if}}
+  {{/modal-dialog}}
+  {{outlet}}
+</div>

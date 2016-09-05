@@ -1,0 +1,26 @@
+
+.block {
+  background-color: $color-block-bg;
+  padding: 1em;
+  margin: 1em auto;
+  @include border-radius($site-default-border-radius);
+
+  .block-title {
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+    margin-bottom: .8em;
+    color: #666;
+    border-left: solid 5px $color-info;
+    padding-left: 4px;
+    //@include text-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  }
+  &.table-block {
+    table {
+      td {
+        padding-right: 1em;
+        padding-bottom: 1em;
+      }
+    }
+  }
+}

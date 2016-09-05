@@ -1,0 +1,30 @@
+<div class="clear-fix">
+    <a href="javascript:;" class="pull-right drop-down">
+        <i style="font-size: 18px;" class="text-theme fa fa-smile-o"></i>
+      {{#drop-menu classNames="fix-bottom fix-right"}}
+          <table class="img-list">
+            {{#each imgCollection as |row|}}
+                <tr>
+                  {{#each row as |one|}}
+                      <td onclick={{action "insertImg" one.name}}>
+                        {{#if one.name}}
+                            <img data-name={{one.name}} onmouseenter={{action "enter"}}
+                                 onmouseout={{action "out"}} src='images/emoji/{{one.name}}.png'/>
+                        {{/if}}
+                      </td>
+                  {{/each}}
+                </tr>
+            {{/each}}
+          </table>
+          <div class="text-center pages">
+              <a href="javascript:;" class="page text-theme" onclick={{action "pageChange" 1}}>[1]</a>
+              <a href="javascript:;" class="page" onclick={{action "pageChange" 2}}>[2]</a>
+              <a href="javascript:;" class="page" onclick={{action "pageChange" 3}}>[3]</a>
+              <a href="javascript:;" class="page" onclick={{action "pageChange" 4}}>[4]</a>
+          </div>
+      {{/drop-menu}}
+    </a>
+</div>
+<div class="content" onfocus={{action "clearRange"}} onblur={{action "saveRange"}} contenteditable="true">
+</div>
+{{yield}}

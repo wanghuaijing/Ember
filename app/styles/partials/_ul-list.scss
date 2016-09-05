@@ -1,0 +1,34 @@
+ul.ul-list {
+  display: inline-block;
+  list-style: none;
+  margin: 0 0 1em 1.5em;
+  cursor: pointer;
+  padding: 0;
+  background-color: $color-block-bg;
+  li {
+    &:hover {
+      background-color: #f8f8f8;
+    }
+    &:first-of-type {
+      @include border-radius($site-default-border-radius $site-default-border-radius 0 0);
+    }
+    &:last-of-type {
+      @include border-radius(0 0 $site-default-border-radius $site-default-border-radius);
+    }
+    border: solid 1px $site-default-border-color;
+    padding: 0 12px;
+    height: 40px;
+    line-height: 40px;
+    margin-top: -1px;
+    label {
+      height: 100%;
+      display: block;
+      line-height: 40px;
+      cursor: pointer;
+    }
+
+    &.active{
+      background-color: #ddd;
+    }
+  }
+}

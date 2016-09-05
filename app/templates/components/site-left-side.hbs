@@ -1,0 +1,11 @@
+<div class="collapse-tag">
+  {{#if collapsed}}
+      <i {{action "toggle" false}} class="fa fa-angle-double-right"></i>
+  {{else}}
+      <i {{action "toggle" true}} class="fa fa-angle-double-left"></i>
+  {{/if}}
+</div>
+<div class="body">
+  {{yield}}
+</div>
+

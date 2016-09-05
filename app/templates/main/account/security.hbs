@@ -1,0 +1,51 @@
+<div class="site-path">账户中心<span class="split"></span>安全设置</div>
+<div class="entrance slide-in-down">
+    <h3>修改密码</h3>
+    <table class="form-table" style="width: 300px;">
+        <tr>
+            <td class="label">
+                旧密码:
+            </td>
+            <td>
+              {{input type="password" value=pwdData.OPassword class="form-control form-control-block" placeholder="请输入旧密码"}}
+            </td>
+        </tr>
+        <tr>
+            <td class="label">
+                新密码:
+            </td>
+            <td>
+              {{input type="password" value=pwdData.NPassword class="form-control form-control-block" placeholder="请输入新密码"}}
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label">
+                重复密码:
+            </td>
+            <td>
+              {{input type="password" value=pwdData.RepeatPassword class="form-control form-control-block" placeholder="请重复输入新密码"}}
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+              {{#if errMsg}}
+                  <p class="text-danger"><i class="fa fa-warning"></i>{{errMsg}}</p>
+              {{/if}}
+                <button class="button button-theme" {{action "submit"}}>
+                  {{#if submiting}}
+                      <i style="font-size:16px;" class="fa fa-spin fa-spinner"></i>
+                  {{else}}
+                      保存修改
+                  {{/if}}
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+{{outlet}}
+
+
+

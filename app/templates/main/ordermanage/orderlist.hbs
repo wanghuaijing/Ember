@@ -1,0 +1,162 @@
+<div class="site-path"><a href="javascript:;">订单管理</a></div>
+
+<div class="entrance slide-in-down">
+    <div class="toolbar">
+        <div class="form-group form-inline">
+            <label class="form-label">关键字:</label>
+            {{input type="text" value=keyword placeholder="订单号或用户手机号" class="form-control"}}
+        </div>
+        <div class="form-group form-inline">
+            <label class="form-label">订单类型:</label>
+            <select class="form-control" onchange={{action "orderTypeChange" value="target.value"}}>
+                {{#each orderTypes as |type|}}
+                    {{#if (eq orderType type.value)}}
+                        <option selected value={{type.value}}>{{type.desc}}订单</option>
+                    {{else}}
+                        <option value={{type.value}}>{{type.desc}}订单</option>
+                    {{/if}}
+                {{/each}}
+            </select>
+        </div>
+        <div class="form-group form-inline">
+            <label class="form-label">商品类型:</label>
+            <select class="form-control" onchange={{action "goodsCategoryChange" value="target.value"}}>
+                {{#each goodsCategorys as |type|}}
+                    {{#if (eq orderType type.value)}}
+                        <option selected value={{type.value}}>{{type.name}}</option>
+                    {{else}}
+                        <option value={{type.value}}>{{type.name}}</option>
+                    {{/if}}
+                {{/each}}
+            </select>
+        </div>
+        {{#if showCloseReasonSelect}}
+            <div class="form-group form-inline">
+                <label class="form-label">关闭原因:</label>
+                <select class="form-control" onchange={{action "closeReasonChange" value="target.value"}}>
+                    {{#each closeReasons as |reason i|}}
+                        {{#if (eq closeReason reason.value)}}
+                            <option selected value={{reason.value}}>{{reason.text}}</option>
+                        {{else}}
+                            <option value={{reason.value}}>{{reason.text}}</option>
+                        {{/if}}
+                    {{/each}}
+                </select>
+            </div>
+        {{/if}}
+        <button class="button button-theme" {{action "search"}}>查询</button>
+    </div>
+
+    {{#data-pagination-view isLoading=isLoading onPageChange=(action 'search') totalCount=totalCount
+    data=pageDataList totalPage=totalPage currentPage=currentPage}}
+        {{#if pageDataList}}
+            {{#each pageDataList as |order i|}}
+                {{order-listing onOperate=(action "orderOperate") order=order}}
+            {{/each}}
+        {{/if}}
+    {{/data-pagination-view}}
+</div>
+
+{{#modal-dialog title="取消订单" show=showDeleteDialog fade=true}}
+    <h4>订单<span class="text-danger">{{deletingOrder.OrderNum}}</span>取消后，将会被关闭，不能再进行其他操作！请谨慎操作!</h4>
+    <p>请选择关闭原因:</p>
+    <ul class="ul-list">
+        {{#each closeReasons as |reason i|}}
+            {{#if reason.value}}
+                <li onclick={{action "deleteReasonChange" reason.value}} class={{if (eq deleteReason reason.value) "active"}}>
+                    <input type="radio" name="deleteReason"
+                           checked={{eq deleteReason reason.value}}
+                                   value={{reason.value}} />
+                    {{reason.text}}
+                </li>
+            {{/if}}
+        {{/each}}
+    </ul>
+    <p></p>
+    <button class="button button-danger" {{action "deleteOrder"}}>
+        {{#if isOrderDeleting}}
+            <i class="fa fa-spin fa-spinner"></i>
+            正在删除
+        {{else}}
+            取消订单
+        {{/if}}
+    </button>
+    <button {{action "toggleDeleteDialog" false}} class="button">返回</button>
+{{/modal-dialog}}
+
+
+{{#modal-dialog title="完成出票" width="800px;" show=showOutTicketDialog fade=true}}
+    {{#if outTicketLoadingDetail}}
+        {{#pre-loader color="theme" visible=true}}{{/pre-loader}}
+    {{else}}
+        <h4>订单信息</h4>
+        {{order-listing  order=outTicketOrderDetail onlyShow=true}}
+        <br>
+        <h4>订票人信息</h4>
+        <table class="table table-noborder">
+            <tr>
+                <td>
+                    订票人:
+                </td>
+                <td>
+                    {{outTicketOrderDetail.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Name}}
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    订票人电话:
+                </td>
+                <td>
+                    {{outTicketOrderDetail.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Phone}}
+                </td>
+            </tr>
+        </table>
+    {{/if}}
+    <p></p>
+    <button class="button button-danger" {{action "outTicket"}}>
+        {{#if orderOutTicketing}}
+            <i class="fa fa-spin fa-spinner"></i>
+            正在出票
+        {{else}}
+            确认出票
+        {{/if}}
+    </button>
+    <button {{action "toggleOutTicketDialog" false}} class="button">返回</button>
+{{/modal-dialog}}
+
+
+{{#modal-dialog title="订单退款" width="500px" show=showRefundDialog fade=true}}
+    <!--<form method="post" action={{actionLink}}>-->
+    {{#if refundOrder}}
+        <h4>您将为订单<span class="text-danger">{{refundOrder.OrderNum}}</span>退款，请谨慎操作!</h4>
+        {{input type="radio" name="refundradio" value=isRefundOK}}
+        通过
+        {{input type="radio" name="refundradio" value=isRefundOK}}
+        不通过
+        <p>退款说明（通过时必填）：</p>
+        {{textarea value=refundReason class="form-control form-control-block" rows=4 name="Description"}}
+        <p></p>
+        {{input type="hidden" value=refundOrder.ID name="Order_no"}}
+    {{/if}}
+    <button class="button button-danger" {{action "refundOrder"}}>
+        {{#if isOrderRefunding}}
+            <i class="fa fa-spin fa-spinner"></i>
+            正在退款
+        {{else}}
+            同意退款
+        {{/if}}
+    </button>
+    <button {{action "toggleRefundDialog" false}} class="button">返回</button>
+    <!--</form>-->
+{{/modal-dialog}}
+
+{{#modal-dialog title="订单退款" width="500px" show=showGoPayDialog fade=false}}
+    <a href={{actionLink}}>点我前去付款</a>
+    <p></p>
+    <button class="button button-primary" {{action "showGoPayDialog" false}}>
+        我已完成付款
+    </button>
+{{/modal-dialog}}
+
+{{outlet}}

@@ -1,0 +1,190 @@
+<div class="site-path">推荐管理<span class="split"></span>banner管理</div>
+<div class="entrance slide-in-down">
+  {{#if addMode}}
+    {{#if itemToAdd}}
+        <div class="block entrance zoom-in">
+            <div class="block-title">添加banner</div>
+            <h4 class="text-grey">
+              {{itemToAdd.Title}}
+            </h4>
+            <!--<div class="thumb thumb-x3" style={{itemToAdd.ThumbStyle}}></div>-->
+          {{#if bannerImgID}}
+              <div class="thumb thumb-x2" style={{bannerImgStyle}}></div>
+              <p></p>
+          {{else}}
+              <p class="text-danger">
+                  <i class="fa fa-info-circle"></i>
+                  请先上传banner图</p>
+          {{/if}}
+            <div>
+                <button {{action "toggleBannerUploadModal" true}} title="添加banner图" class="button button-primary"><i
+                        class="fa fa-picture-o"></i>
+                </button>
+              {{#if bannerImgID}}
+                {{#unless replaceStickieRequesting}}
+                    <button {{action "postAddStickieRequest"}} title="添加" class="button button-success"><i
+                            class="fa {{if addStickieRequesting 'fa-spin fa-spinner' 'fa-plus'}}"></i>
+                      {{#if addStickieRequesting}}
+                          添加中
+                      {{/if}}
+                    </button>
+                {{/unless}}
+                {{#unless addStickieRequesting}}
+                    <button {{action "beginReplaceState"}} title="替换" class="button button-caution"><i
+                            class="fa {{if replaceStickieRequesting 'fa-spin fa-spinner' 'fa-exchange'}}">
+                      {{#if replaceStickieRequesting}}
+                          替换中
+                      {{/if}}
+                    </i>
+                    </button>
+                {{/unless}}
+                {{#if replaceState}}
+                    <button {{action "cancelReplaceState"}} class="button button-danger">
+                        退出替换
+                    </button>
+                {{/if}}
+              {{/if}}
+            </div>
+        </div>
+    {{/if}}
+  {{/if}}
+
+    <div class="block">
+        <div class="block-title">Banner列表</div>
+      {{#if serverBannerList}}
+          <div class="banner-list entrance slide-left-in">
+              {{log serverBannerList}}
+            {{#each serverBannerList as |item|}}
+                <div class="item">
+                    <div class="banner {{if item.Active 'active'}}" {{action (if replaceState 'submitReplaceRequest' 'addExChangeItem') item}}>
+                        <div class="thumb thumb-x3 thumb-block" style={{item.BannerImageStyle}}></div>
+                        <div class="desc">{{item.Title}}</div>
+                        <!--<div class="mask">-->
+                        <!--<span class="arrow-left">-->
+                        <!--<i class="fa fa-angle-left"></i>-->
+                        <!--</span>-->
+                        <!--<span class="arrow-right">-->
+                        <!--<i class="fa fa-angle-right"></i>-->
+                        <!--</span>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            {{/each}}
+          </div>
+      {{else}}
+          <h4 class="text-info">
+              <i class="fa fa-smile-o"></i>
+              添加一个呗~</h4>
+      {{/if}}
+        <p></p>
+        <div>
+          {{#if editMode}}
+              <span class="entrance slide-left-in">
+              {{#if ableToExChange}}
+                  <button class="button-primary button" {{action 'submitExchange'}}>
+                    {{#if exchangeRequesting}}
+                        <i class="fa fa-spin fa-spinner"></i>
+                        交换中
+                    {{else}}
+                        交换
+                    {{/if}}
+                  </button>
+              {{/if}}
+                {{#if showDeleteButton}}
+                    <button {{action 'submitDelete'}} class="button button-danger">
+
+                      {{#if deleteRequesting}}
+                          <i class="fa fa-spin fa-spinner"></i>
+                          删除中
+                      {{else}}
+                          删除
+                      {{/if}}
+                    </button>
+                {{/if}}
+                  <button {{action 'exitEditMode'}} class="button">退出编辑</button>
+              </span>
+          {{else if addMode}}
+              <span class="entrance slide-left-in">
+                <button {{action 'toggleListDialog' true}} class="button-primary button">选择推荐</button>
+                <button {{action 'exitAddMode'}} class="button">返回</button>
+              </span>
+          {{else}}
+              <span class="entrance slide-left-in">
+                <button {{action 'enterAddMode'}} class="button button-success">添加</button>
+                <button {{action 'enterEditMode'}} class="button button-caution">编辑</button>
+              </span>
+          {{/if}}
+        </div>
+    </div>
+
+  {{#modal-dialog fade=true width="500px" show=showBannerUploadDialog title="上传图片"}}
+    {{#file-picker percent=uploadPercent onFileChange=(action "uploadBannerPic")}}{{/file-picker}}
+  {{/modal-dialog}}
+
+  {{#modal-dialog fade=true width="80%" show=showListDialog title="选择帖子"}}
+      <div>
+          <div class="form-group form-inline">
+              <label class="form-label">是否定时:</label>
+              <select class="form-control" onchange={{action "typeChange" value="target.value"}}>
+                {{#if (eq isFixedTime "0")}}
+                    <option value="0" selected>否</option>
+                    <option value="1">是</option>
+                {{else}}
+                    <option value="0">否</option>
+                    <option value="1" selected>是</option>
+                {{/if}}
+              </select>
+          </div>
+          <button class="button button-theme" {{action "search"}}>查询</button>
+      </div>
+
+    {{#pre-loader color="theme" visible=isLoading}}{{/pre-loader}}
+    {{#if dataList}}
+        <table class="table table-block table-theme">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>标题</th>
+                <th>发布时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each dataList as |item i|}}
+                <tr>
+                    <td class="text-center">{{item.ID}}</td>
+                    <td class="text-center">{{item.Title}}</td>
+                    <td class="text-center">{{item.Time}}</td>
+                    <td class="text-center">
+                      {{#if item.IsBanner}}
+                          <a title="已存在于banner"
+                             href="javascript:;"
+                             class="button button-danger rounded">
+                              <i class="fa fa-bookmark"></i>
+                          </a>
+                      {{else}}
+                          <a title="添加到banner" {{action "addStickie" item}}
+                             href="javascript:;"
+                             class="button button-theme rounded">
+                              <i class="fa fa-arrow-up"></i>
+                          </a>
+                      {{/if}}
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    {{else}}
+      {{#unless isLoading}}
+          <p>未查询或没有查询到结果</p>
+      {{/unless}}
+    {{/if}}
+
+    {{#if totalPage}}
+        <div class="site-body-footer text-center">
+          {{#pagination-view classNames="pagination-theme" current=currentPage total=totalPage onChange=(action "pageChange")}}{{/pagination-view}}
+        </div>
+    {{/if}}
+  {{/modal-dialog}}
+</div>
+{{outlet}}

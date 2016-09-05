@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>小生活后台管理</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    {{content-for "head"}}
+
+    <link rel="stylesheet" href="assets/vendor.css">
+    <link rel="stylesheet" href="kindeditor/themes/default/default.css">
+    <link rel="stylesheet" href="assets/app.css">
+
+    {{content-for "head-footer"}}
+  </head>
+  <body class="theme-primary">
+    {{content-for "body"}}
+
+    <script src="kindeditor/kindeditor-min.js"></script>
+    <script src="kindeditor/lang/zh_CN.js"></script>
+    <script src="assets/vendor.js"></script>
+    <script src="assets/lf-manage.js"></script>
+
+    {{content-for "body-footer"}}
+  </body>
+</html>

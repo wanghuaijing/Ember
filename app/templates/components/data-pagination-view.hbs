@@ -1,0 +1,17 @@
+{{#pre-loader color="theme" visible=isLoading}}{{/pre-loader}}
+{{#if totalCount}}
+    <p class="text-theme">共查询到{{totalCount}}条结果:</p>
+{{/if}}
+{{#if data}}
+  {{yield}}
+{{else}}
+  {{#unless isLoading}}
+      <p>未查询或没有查询到结果</p>
+  {{/unless}}
+{{/if}}
+
+{{#if totalPage}}
+    <div class="site-body-footer text-center">
+      {{#pagination-view classNames="pagination-theme" current=currentPage total=totalPage onChange=(action "pageChange")}}{{/pagination-view}}
+    </div>
+{{/if}}

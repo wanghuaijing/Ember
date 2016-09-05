@@ -1,0 +1,15 @@
+<div class="thumb-block thumb thumb-x2">
+  {{#if percent}}
+      <div class="thumb-progress" style={{percentStyles}}></div>
+      <div class="thumb-text">{{percent}}</div>
+  {{else}}
+      <div class="thumb-text" style="font-size:50px;"><i class="fa fa-file-text"></i></div>
+  {{/if}}
+</div>
+{{#if imgSrc}}
+    <p></p>
+    <img src={{imgSrc}} style="width:100%">
+{{/if}}
+<div style="display: none;">
+  {{input type="file" multiple=multiple  accept=accept}}
+</div>

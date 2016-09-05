@@ -1,0 +1,54 @@
+<div class="site-path"><a href="javascript:;">商品模板管理</a></div>
+<div class="entrance slide-in-down">
+    <div class="toolbar">
+        <div class="form-group form-inline">
+            <label class="form-label">关键字:</label>
+            {{input type="text" value=keyword placeholder="分类名称" class="form-control"}}
+        </div>
+        <div class="form-group form-inline">
+            <label class="form-label">分类选择:</label>
+            {{laze-select onchange=(action "onchange")}}
+        </div>
+        <button class="button button-theme" {{action "search"}}>查询</button>
+    </div>
+    {{#data-pagination-view isLoading=isLoading onPageChange=(action 'search')
+    totalCount=totalCount data=pageDataList totalPage=totalPage currentPage=currentPage}}
+        <table class="table table-block table-hover table-theme">
+            <thead>
+
+            <tr>
+                <th>
+                    分类名称
+                </th>
+                <th>
+                    有无商品模板
+                </th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each pageDataList as |data|}}
+                <tr >
+                    <td class="text-center" >{{data.Name}}</td>
+                    <td class="text-center">{{if data.IsExistTemplate '有' '无' }}</td>
+                    <td class="text-center">
+                        {{#if data.IsExistTemplate}}
+                            {{#link-to "main.shop.templatedetail" (query-params goodsTemplateID=data.TemplateID type="detail"
+                            categoryID=data.ID categoryName=data.Name isExistGoods=data.IsExistGoods)
+                            class="button button-primary"}}编辑模板{{/link-to}}
+                        {{#if data.IsExistGoods}}
+                            {{else}}
+                            <button class="button button-danger" onclick={{action 'deleteTemplate' data.TemplateID}} >删除模板</button>
+                        {{/if}}
+                        {{else}}
+                            {{#link-to "main.shop.templatedetail" (query-params goodsTemplateID=data.TemplateID type="add"
+                            categoryID=data.ID categoryName=data.Name isExistGoods=data.IsExistGoods)
+                            class="button button-success"}}添加模板{{/link-to}}
+                        {{/if}}
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    {{/data-pagination-view}}
+</div>

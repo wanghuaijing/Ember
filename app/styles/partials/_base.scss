@@ -1,0 +1,21 @@
+//colors
+$color-primary: #2196f3;
+$color-info: #5bc0de;
+$color-danger: #f44336;
+$color-caution: #f79702;
+$color-success: #0f9d58;
+$color-grey: #999;
+$color-dark: #293038;
+
+$color-collection: (dark:$color-dark, grey:$color-grey, primary:$color-primary, info:$color-info, danger:$color-danger, caution:$color-caution, success:$color-success);
+
+//default
+$site-default-color: $color-primary;
+$site-default-border-color: #ccc;
+$site-default-border-radius: 2px;
+
+$color-block-bg: #fff;
+
+//variables
+$form-element-height: 34px;
+

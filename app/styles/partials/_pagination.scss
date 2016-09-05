@@ -1,0 +1,38 @@
+/**
+ * pagination style
+ * colors:color-collection
+ */
+
+.pagination{
+  margin:0 -2px 0 -2px;
+  display: inline-block;
+  cursor: pointer;
+  .item{
+    padding:8px 12px;
+    border:solid 1px $site-default-border-color;
+    display: inline-block;
+    cursor: pointer;
+    margin:0 2px;
+    @include border-radius($site-default-border-radius);
+
+    &:hover, &.active{
+      background-color: #bbb;
+      border-color: #bbb;
+      color:#fff;
+    }
+
+    &:active{
+      position: relative;
+      top:1px;
+      left:1px;
+    }
+  }
+
+  @each $name,$color in $color-collection{
+    &.pagination-#{$name}{
+      .item {
+        @include pagination-color($color)
+      }
+    }
+  }
+}

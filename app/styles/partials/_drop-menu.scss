@@ -1,0 +1,77 @@
+/**
+ * drop down menu style
+ */
+
+.drop-down {
+  position: relative;
+  overflow: visible;
+  .drop-menu {
+    z-index: 99;
+    font-size: 14px;
+    display: none;
+    position: absolute;
+    //border: solid 1px #ccc;
+    background-color: #fff;
+    @include border-radius(4px);
+    @include box-shadow(0 1px 6px rgba(0, 0, 0, 0.46));
+    color: #666;
+    top: 100%;
+    left: 0;
+    &.fix-right {
+      left: auto;
+      right: 0;
+    }
+
+    &.fix-bottom {
+      top: auto;
+      bottom: 100%;
+      margin-bottom: 8px;
+      margin-top: 0;
+    }
+
+    @include animation-duration(.3s);
+
+    min-width: 120px;
+    margin-top: 8px;
+    ul {
+      margin: 0;
+      list-style: none;
+      padding: 0 4px;
+      li {
+        cursor: pointer;
+        a, > span {
+          display: block;
+          padding: 4px;
+          margin: 4px 0;
+        }
+        @include border-radius(2px);
+        .tag {
+          display: inline-block;
+          width: 16px;
+          text-align: center;
+          margin-right: 6px;
+        }
+        &:hover {
+          background-color: #ddd;
+        }
+        &.split {
+          padding: 0;
+          border-bottom: solid 1px #ccc;
+        }
+      }
+    }
+  }
+
+  &.open {
+    .drop-menu {
+      display: block;
+    }
+  }
+}
+
+.button.drop-down {
+  &:active {
+    top: 0;
+    left: 0;
+  }
+}

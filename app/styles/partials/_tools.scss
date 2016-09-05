@@ -1,0 +1,96 @@
+/**
+ * css tools for text, bg ,color and so on.
+ */
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+@each $name, $color in $color-collection {
+  .text-#{$name} {
+    color: $color !important;
+  }
+
+  .bg-#{$name} {
+    background-color: $color !important;
+  }
+
+  a.link-#{$name} {
+    color: lighten($color, 10%) !important;
+    &:hover {
+      color: $color;
+      text-decoration: underline;
+    }
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.clear-fix {
+  @include clearfixed();
+}
+
+.no-wrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.thumb {
+  @include background-size(cover);
+  background-position: center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+
+  @each $name in (1, 2, 3, 4) {
+    &.thumb-x#{$name} {
+      width: $name * 50px;
+      height: $name * 50px;
+
+      .thumb-text {
+        text-align: center;
+        width: $name * 50px;
+        height: $name * 50px;
+        line-height: $name * 50px;
+        font-size: 18px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #fff;
+      }
+    }
+  }
+  text-align: center;
+  background-color: #ddd;
+
+  &.thumb-block {
+    display: block;
+    width: auto;
+    .thumb-text {
+      width: 100%;
+    }
+  }
+
+  .thumb-progress {
+    height: 100%;
+    width: 0;
+    background-color: $color-primary;
+  }
+}
+
+.seperate-line{
+  border-bottom: solid 1px $site-default-border-color;
+}
+

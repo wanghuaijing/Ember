@@ -1,0 +1,104 @@
+/**
+ * modal style
+ */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  z-index: 999;
+  display: none;
+  .modal-dialog {
+    position: relative;
+    padding: 70px 0 30px;
+    min-height: 100%;
+    box-sizing: border-box;
+
+    .modal-drop {
+      background-color: rgba(0, 0, 0, .3);
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1;
+      &.open {
+        display: block;
+      }
+    }
+
+    .modal-content {
+      position: relative;
+      z-index: 2;
+      width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: #fff;
+      padding: 12px 16px;
+      box-sizing: border-box;
+      @include box-shadow(0 2px 10px rgba(0, 0, 0, 0.5));
+      border-radius: 2px;
+      .modal-header {
+        position: relative;
+        font-size: 18px;
+        .modal-title {
+          padding-bottom: .6em;
+          padding-top: .2em;
+          margin: 0;
+        }
+        .close {
+          color: #c6c6c6;
+          position: absolute;
+          top: .3em;
+          right: 5px;
+          cursor: pointer;
+          &:hover {
+            color: $color-danger;
+          }
+        }
+      }
+      .modal-body{
+        //overflow: hidden;
+        @include clearfixed();
+      }
+      .modal-tool{
+        padding: 5px 0;
+        button{
+          float: right;
+          margin-right: 10px;
+        }
+        @include clearfixed();
+      }
+    }
+  }
+
+  &.modal-open {
+    display: block;
+    &.fade {
+      .modal-dialog {
+        .modal-content {
+          @include transform(translate3d(0, 0, 0));
+        }
+      }
+      opacity: 1;
+    }
+  }
+
+  &.fade {
+    @include transition(opacity .2s linear);
+    opacity: 0;
+    .modal-dialog {
+      .modal-content {
+        @include transition(transform .3s ease);
+        @include transform(translate3d(0, -30%, 0));
+      }
+    }
+  }
+}
+
+body.modal-open {
+  overflow: hidden;
+}

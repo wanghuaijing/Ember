@@ -1,0 +1,17 @@
+<div class="login-container">
+    <div class="login-header">
+        欢迎登录
+    </div>
+    <div class="login-form">
+        <div class="login-form-row">
+          {{input type="text" value=formData.Usr placeholder="请输入账号"}}
+            <div class="sep"></div>
+        </div>
+        <div class="login-form-row">
+          {{input type="password" value=formData.Pwd placeholder="请输入密码"}}
+          <span class="login-btn" {{action "login"}}><i class="fa {{if loading "fa-spinner fa-spin" "fa-arrow-circle-right"}}"></i></span>
+        </div>
+    </div>
+    <div class="login-message">{{#if errorMsg}}<i class="fa fa-warning"></i>{{errorMsg}}{{/if}}</div>
+    <!--<div class="login-forget"><a href="javascript:;">忘记密码?</a></div>-->
+</div>

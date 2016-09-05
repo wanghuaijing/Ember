@@ -1,0 +1,119 @@
+<div class="site-path">推荐管理<span class="split"></span>新增推荐</div>
+<div class="entrance slide-in-down">
+    <div>
+        <table class="form-table" style="width: 600px;">
+            <tr>
+                <td class="label">
+                    标题:
+                </td>
+                <td>
+                  {{input type="text" value=data.Title class="form-control form-control-block" placeholder="请输入标题"}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    所属分类:
+                </td>
+                <td>
+                    <select class="form-control" onchange={{action "categoryChange" value="target.value"}}>
+                      {{#each model.Data as |item|}}
+                        {{#if (eq item.ID data.CID)}}
+                            <option value="{{item.ID}}" selected="selected">{{item.Name}}</option>
+                        {{else}}
+                            <option value="{{item.ID}}">{{item.Name}}</option>
+                        {{/if}}
+                      {{/each}}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    定时发送:
+                </td>
+                <td>
+                    <select class="form-control" onchange={{action "fixedTimeChange" value="target.value"}}>
+                      {{#if isFixedTime}}
+                          <option value="0">否</option>
+                          <option value="1" selected>是</option>
+                      {{else}}
+                          <option value="0" selected>否</option>
+                          <option value="1">是</option>
+                      {{/if}}
+                    </select>
+                  {{#if isFixedTime}}
+                    {{input type="text" class="form-control" value=data.Time placeholder="请输入日期时间"}} <span
+                          class="text-caution">暂时手动输入 格式xxxx-xx-xx xx:xx:xx</span>
+                  {{/if}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    封面图片:
+                </td>
+                <td>
+                    <div {{action 'toggleUploadDialog' true 'listShow' IMAGE_TYPE.LIST_SHOW}} class="thumb thumb-x2"
+                                                                                              style={{listShowImgStyle}}>
+                      {{#unless listShowImgStyle}}
+                          <div class="thumb-text" style="font-size: 30px;"><i class="fa fa-file-image-o"></i></div>
+                      {{/unless}}
+                    </div>
+                  {{#if data.ListShowPic}}
+                      <button class="button" {{action 'clearListShowImg'}}>清除</button>
+                  {{/if}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    插入图片:
+                </td>
+                <td>
+                    <button class="button button-theme" {{action 'toggleUploadDialog' true IMAGE_TYPE.INSERT}}>点击选择
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <p></p>
+  {{#media-editor onInit=(action "editorLoaded") initialData=data._MediaContent}}
+      <textarea style="width:700px;height:400px;"></textarea>
+  {{/media-editor}}
+    <p></p>
+    <button class="button button-theme button-big"  {{action "submit"}}>
+      {{#if uploading}}
+          <i class="fa fa-spin fa-spinner"></i>
+      {{else}}
+          提交
+      {{/if}}
+    </button>
+  {{#if data.Title}}
+      <button class="button button-big button-info" {{action "preview"}}>预览</button>
+  {{/if}}
+    <button class="button button-big" {{action "resetForm"}}>清空数据</button>
+  {{#if autoSavedInfoShow}}
+      <span class="animated fadeOut text-info" style="animation-delay: 2s; animation-duration: 1s;">
+      <i class="fa fa-info-circle"></i>
+          自动保存成功
+      </span>
+  {{/if}}
+</div>
+
+{{#modal-dialog fade=true width="500px" show=toggleUploadDialog title="上传图片"}}
+  {{#file-picker imgSrc=imgSrc percent=uploadPercent onFileChange=(action "upload")}}{{/file-picker}}
+  <p>
+  </p>
+  {{#if imgID}}
+      <button class="button button-danger" {{action "deleteUploadedImage"}}>删除</button>
+      <button class="button button-theme" {{action "addImage"}}>添加</button>
+  {{/if}}
+{{/modal-dialog}}
+
+<!--preview dialog-->
+{{#modal-dialog width="450px" fade=true show=togglePreviewDialog title="帖子预览"}}
+  {{#pre-loader color="theme" visible=detailLoading}}{{/pre-loader}}
+  <h4 class="text-grey">
+    {{{previewData.Title}}}
+  </h4>
+  <p class="media-content">
+    {{{previewData.MediaContent}}}
+  </p>
+{{/modal-dialog}}

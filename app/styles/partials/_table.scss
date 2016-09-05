@@ -1,0 +1,42 @@
+/**
+ * table style
+ */
+
+table.table {
+
+  &.table-block {
+    width: 100%;
+    @include box-sizing(border-box);
+  }
+
+  &.table-noborder {
+    td, th {
+      border: none;
+    }
+  }
+
+  th {
+    font-size: 16px;
+    color: #666;
+    background-color: #fff;
+    white-space: nowrap;
+  }
+  th, td {
+    padding: 8px 6px;
+    border-bottom: solid 1px $site-default-border-color;
+    i{
+      font-size: 20px;
+      margin: 0 5px;
+      width: 12px;
+    }
+    i:hover{
+      cursor: pointer;
+    }
+  }
+
+  &.table-hover {
+    tr:hover {
+      background-color: #eee;
+    }
+  }
+}

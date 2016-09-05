@@ -1,0 +1,80 @@
+<div class="site-path"><a href="javascript:;">销量统计</a></div>
+
+<div class="entrance slide-in-down">
+    <div class="toolbar">
+        <div class="form-group form-inline">
+            <label class="form-label">关键字:</label>
+            {{input type="text" value=keyword placeholder="商品名/编号" class="form-control"}}
+        </div>
+        {{date-picker dateValue=beginTime placeholder="开始时间"}}
+        至
+        {{date-picker dateValue=endTime placeholder="结束时间"}}
+        <button {{action 'search'}} class="button button-theme">查询</button>
+    </div>
+
+    {{#data-pagination-view isLoading=isLoading onPageChange=(action 'search') totalCount=totalCount data=pageDataList totalPage=totalPage currentPage=currentPage}}
+        <table class="table table-block table-hover table-theme">
+            <thead>
+            <tr>
+                <th>
+                    排行
+                </th>
+                <th>
+                    商品编号
+                </th>
+                <th>
+                    商品名称
+                </th>
+                <th>总销售额（元）</th>
+                <th>退款金额（元）</th>
+                <th>优惠金额（元）</th>
+                <th>实际销售额（元）</th>
+                <th>所占比</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each pageDataList as |data|}}
+                <tr>
+                    <td class="text-center">{{data.Rank}}</td>
+                    <td class="text-center text-primary"><a
+                            href="javascript:;" {{action "toggleSalesOfMonthDialog" true data}}>{{data.No}}</a></td>
+                    <td class="text-center">{{data.Name}}</td>
+                    <td class="text-center">{{data.SaleMoney}}</td>
+                    <td class="text-center">{{data.ReturnedSaleMoney}}</td>
+                    <td class="text-center">{{data.DiscountSaleMoney}}</td>
+                    <td class="text-center">{{data.ActualSaleMoney}}</td>
+                    <td class="text-center">{{data.ProportionSaleMoney}}</td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    {{/data-pagination-view}}
+
+    {{#modal-dialog onModalClose=(action "modalClose") show=showSalesOfMonthDialog title="商品每月销量对比" width="800px;"}}
+        <div class="toolbar">
+            <div class="form-group form-inline">
+                <label class="form-label">关键字:</label>
+                {{input type="text" disabled=true value=activeGoods.No placeholder="商品名/编号" class="form-control"}}
+            </div>
+            <div class="form-group form-inline">
+                <label class="form-label">年份:</label>
+                <select class="form-control" onchange={{action "yearChange" value="target.value"}}>
+                    {{#each years as |year|}}
+                        {{#if (eq year activeYear)}}
+                            <option selected="selected" value={{year}}>{{year}}</option>
+                        {{else}}
+                            <option value={{year}}>{{year}}</option>
+                        {{/if}}
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div style="width: 100%;height:400px;">
+            {{#pre-loader color="theme" visible=isLoadingSalesOfMonth}}{{/pre-loader}}
+            {{#if chartData}}
+                {{chart-view type="Bar" data=chartData}}
+            {{/if}}
+        </div>
+    {{/modal-dialog}}
+</div>
+{{outlet}}

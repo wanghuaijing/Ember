@@ -1,0 +1,75 @@
+.messager {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+
+  $width: 350px;
+  .messager-dialog {
+    position: absolute;
+    top: 30%;
+    width: $width;
+    background-color: #fff;
+    @include box-shadow(0 1px 8px rgba(0, 0, 0, 0.4));
+    @include box-sizing(border-box);
+    padding: 25px 25px 15px 25px;
+    left: 50%;
+    margin-left: -$width / 2;
+    @include border-radius(3px);
+    @include clearfixed();
+
+    @include animation(messager-entry .2s ease);
+
+    .messager-header {
+      @include clearfixed();
+      .close {
+        float: right;
+        cursor: pointer;
+        &:hover {
+          color: $color-danger;
+        }
+      }
+    }
+
+    .messager-footer{
+      @include clearfixed();
+      padding: 20px 0 0 20px;
+    }
+
+    .messager-tag {
+      float: left;
+      width: 40px;
+    }
+
+    .messager-body {
+      margin-left: 50px;
+      padding-top: 4px;
+      word-break: break-all;
+      word-wrap: break-word;
+    }
+  }
+}
+
+@include keyframes(messager-entry) {
+  0% {
+    //@include transform(scale(.3));
+    opacity: .2;
+  }
+  100% {
+    //@include transform(scale(1));
+    opacity: 1;
+  }
+}
+
+@include keyframes(messager-out) {
+  0% {
+    @include transform(scale(1));
+    opacity: 1;
+  }
+  100% {
+    @include transform(scale(0));
+    opacity: .5;
+  }
+}

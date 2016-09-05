@@ -1,0 +1,106 @@
+<div class="site-path"><a href="javascript:;">生活圈管理</a><span class="split"></span>发表新帖</div>
+<div class="entrance slide-in-down">
+    <div>
+        <table class="form-table" style="width: 600px;">
+            <tr>
+                <td class="label">
+                    标题:
+                </td>
+                <td>
+                  {{input type="text" value=formData.Title class="form-control form-control-block" placeholder="请输入标题"}}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    所属分类:
+                </td>
+                <td>
+                    <select class="form-control" onchange={{action "categoryChange" value="target.value"}} >
+                      {{#each model.Data as |item|}}
+                        {{#if (eq item.ID formData.CID)}}
+                            <option value="{{item.ID}}" selected="selected">{{item.Name}}</option>
+                        {{else}}
+                            <option value="{{item.ID}}">{{item.Name}}</option>
+                        {{/if}}
+                      {{/each}}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    是否匿名:
+                </td>
+                <td>
+                    <select class="form-control" onchange={{action "isAnonymousChange" value="target.value"}} >
+                      {{#if formData.IsAnonymous}}
+                          <option value="false">否</option>
+                          <option value="true" selected>是</option>
+                      {{else}}
+                          <option value="false" selected>否</option>
+                          <option value="true">是</option>
+                      {{/if}}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    插入图片:
+                </td>
+                <td>
+                  {{#if files}}
+                    {{#each files as |one|}}
+                        <div style="vertical-align: top; display: inline-block;width: 100px;">
+                            <div class="thumb thumb-x2" style={{one.style}}>
+                              {{#unless one.src}}
+                                  <div class="thumb-text"><i class="text-theme fa fa-spin fa-spinner"></i></div>
+                              {{/unless}}
+                            </div>
+                            <div title="{{one.file.name}}" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;position: relative;padding-right: 15px;">{{one.file.name}}
+                                <span {{action "deleteFile" one}}
+                                        class="text-danger cursor-pointer"
+                                        style="position: absolute;bottom:1px;right:0;">&times;</span></div>
+                        </div>
+                    {{/each}}
+                  {{/if}}
+                    <p></p>
+                    <button style="vertical-align: bottom;" class="button button-theme" {{action 'toggleUploadDialog' true}}>点击选择
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    帖子内容:
+                </td>
+                <td>
+                  {{#emoji-textarea onInitial=(action "emojiTextCreate") onChange=(action "emojiTextChange") settingContent=formData.Content}}{{/emoji-textarea}}
+                </td>
+            </tr>
+        </table>
+    </div>
+    <p></p>
+    <button class="button button-theme button-big"  {{action "submit"}}>
+      {{#if isSubmitting}}
+          <i class="fa fa-spin fa-spinner"></i>
+      {{else}}
+          提交
+      {{/if}}
+    </button>
+    <button class="button button-big" {{action "resetForm"}}>清空数据</button>
+  {{#if isSubmitting}}
+      <p class="text-info"><i class="fa fa-info-circle"></i>
+          如果帖子中含有图片,上传时间可能较长,请耐心等待</p>
+  {{/if}}
+
+  {{#modal-dialog fade=true width="500px" show=showUploadDialog title="上传图片"}}
+    {{#file-picker imgSrc=imgSrc multiple=true onFileChange=(action "fileChoose")}}{{/file-picker}}
+      <p class="text-caution">
+          <i class="fa fa-info-circle"></i>
+          如果选择了图片没有反应,请确认你选择的是和上次不一样的图片
+      </p>
+    {{#if imgID}}
+        <button class="button button-danger" {{action "deleteUploadedImage"}}>删除</button>
+        <button class="button button-theme" {{action "addImage"}}>添加</button>
+    {{/if}}
+  {{/modal-dialog}}
+</div>
+{{outlet}}

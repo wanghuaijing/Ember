@@ -1,0 +1,44 @@
+@mixin clearfixed() {
+  &:before, &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+.show-table{
+  display: grid;
+}
+.disappear{
+  display: none;
+}
+@mixin button-color($color) {
+  background-color: $color;
+  color: #fff;
+  border-color: $color;
+  //box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  &:hover, &:active, &.active {
+    background-color: lighten($color, 2%);
+    border-color: lighten($color, 2%);
+    //box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  &:active,&.active{
+    background-color: darken($color, 4%);
+    border-color: darken($color, 4%);
+  }
+
+  &:link, &:visited {
+    color: #fff;
+  }
+}
+
+@mixin pagination-color($color) {
+  border-color: darken($color, 5%);
+  &:hover {
+    background-color: $color;
+  }
+  &:active, &.active {
+    background-color: darken($color, 5%);
+    color: #fff;
+  }
+}

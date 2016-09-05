@@ -1,0 +1,166 @@
+<div class="site-path">
+    <a href="javascript:;" {{action 'goBack'}}>
+        <i class="fa fa-angle-left fa-2x"></i>
+        返回
+    </a>
+</div>
+<div>
+  {{#pre-loader color="theme" visible=isLoading}}{{/pre-loader}}
+  {{#if orderData}}
+      <div class="block">
+          订单号:{{orderData.OrderNum}}
+        {{#if orderData.CloseReason}}
+            <span class="pull-right text-danger">{{orderData.OrderStatusName}}
+                ({{orderData.CloseReason}})</span>
+        {{else}}
+            <span class="pull-right">{{orderData.OrderStatusName}}</span>
+        {{/if}}
+      </div>
+      <div style="padding:30px;" class="order-time-line">
+          <div class="item active">
+              <div class="time">{{orderData.OrderTime.Submit}}</div>
+              <div class="desc">提交订单</div>
+          </div>
+        {{#if orderData.OrderTime.Pay}}
+            <div class="item active">
+                <div class="time">{{orderData.OrderTime.Pay}}</div>
+                <div class="desc">付款</div>
+            </div>
+        {{else}}
+            <div class="item">
+                <div class="desc">付款</div>
+            </div>
+        {{/if}}
+        {{#if orderData.OrderTime.Shipping}}
+            <div class="item active">
+                <div class="time">{{orderData.OrderTime.Shipping}}</div>
+                <div class="desc">出票</div>
+            </div>
+        {{else}}
+            <div class="item">
+                <div class="desc">出票</div>
+            </div>
+        {{/if}}
+        {{#if orderData.OrderTime.Finish}}
+            <div class="item active">
+                <div class="time">{{orderData.OrderTime.Finish}}</div>
+                <div class="desc">交易完成</div>
+            </div>
+        {{else}}
+            <div class="item">
+                <div class="desc">交易完成</div>
+            </div>
+        {{/if}}
+      </div>
+      <h4>商品信息</h4>
+      <div class="block">
+        {{#each orderData.Vendors.Goods as |goods|}}
+            <div class="goods-view">
+                <table>
+                    <tr>
+                        <td class="goods-img">
+                          {{img-loader tagName="div" original=(file-path goods.BigPhoto 4)}}
+                        </td>
+                        <td class="goods-desc">
+                            <p class="name">{{goods.Name}}</p>
+                            <p>&times;{{goods.Num}}</p>
+                            <p>{{goods.PriceShow}}</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        {{/each}}
+      </div>
+      <h4>订票人信息</h4>
+      <div class="block">
+          <table class="table table-noborder">
+              <tr>
+                  <td>
+                      订票人:
+                  </td>
+                  <td>
+                    {{orderData.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Name}}
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      订票人电话:
+                  </td>
+                  <td>
+                    {{orderData.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Phone}}
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      收货地址
+                  </td>
+                  <td>
+                      {{orderData.ShippingAddr.Where}}
+                  </td>
+              </tr>
+          </table>
+      </div>
+      <br>
+      <br>
+      <div class="seperate-line"></div>
+      <br>
+      <h4>订单信息</h4>
+      <table class="table table-noborder">
+          <tr>
+              <td>
+                  订单号:
+              </td>
+              <td>
+                {{orderData.OrderNum}}
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  创建时间:
+              </td>
+              <td>
+                {{orderData.OrderTime.Submit}}
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  付款时间:
+              </td>
+              <td>
+                {{if orderData.OrderTime.Pay orderData.OrderTime.Pay "未付款"}}
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  付款类型:
+              </td>
+              <td>
+                {{orderData.PayDetail.PayMethodName}}
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  下单账号:
+              </td>
+              <td>
+                {{orderData.UserName}}
+              </td>
+          </tr>
+      </table>
+      <h4 class="block text-right">
+          <span style="margin-right: 2em;">共
+            <span class="text-danger">{{orderData.TotalNum}}</span>
+              件商品
+          </span>
+          <span style="margin-right: 2em;">运费
+              <span class="text-danger">￥{{orderData.ShippingPrice}}</span>
+              </span>
+          <span style="margin-right: 2em;">商品总额
+               <span class="text-danger">￥{{orderData.TotalPrice}}</span>
+            </span>
+          <span style="margin-right: 2em;">订单金额
+               <span class="text-danger">￥{{orderData.TotalPrice}}</span>
+              </span>
+      </h4>
+  {{/if}}
+</div>

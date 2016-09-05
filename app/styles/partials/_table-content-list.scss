@@ -1,0 +1,91 @@
+/**
+ * table content style ,main for recommend list
+ */
+
+.table-c-list {
+  $theme-color: $color-primary;
+  $border-color: #c6c6c6;
+  margin-top: 10px;
+  width: 100%;
+  @include border-radius(2px 2px 0 0);
+  overflow: hidden;
+  thead {
+    th {
+      font-size: 16px;
+      //font-weight: normal;
+      padding: 12px 0;
+      color: #fff;
+    }
+  }
+  td{
+    border-bottom: solid 1px $border-color;
+    border-top: solid 1px $border-color;
+  }
+
+  .table-c-one {
+    height: 80px;
+    border-collapse: collapse;
+    //@include animation-duration(.8s);
+    //margin-top: -1px;
+    &:hover {
+      background-color: #f8f8f8;
+    }
+    td {
+      padding: 8px;
+    }
+    .table-c-img {
+      vertical-align: middle;
+      height: 80px;
+      width: 80px;
+      background: no-repeat center;
+      background-size: cover;
+      //background-image: url(../img/logo.png);
+      @include animation-duration(.3s);
+    }
+    .table-c-content {
+      vertical-align: top;
+      padding: 0;
+      h1 {
+        height: 25px;
+        line-height: 25px;
+        font-size: 16px;
+        color: #666;
+        margin: 0;
+        padding: 0;
+        word-break: break-all;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        a, a:link, a:visited {
+          color: #666;
+        }
+        //a:hover {
+        //  color: #333;
+        //  text-decoration: underline;
+        //}
+        margin-bottom: 10px;
+      }
+      h2 {
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        color: #666666;
+        word-break: break-all;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: normal;
+        height: 32px;
+        line-height: 16px;
+      }
+    }
+    .table-c-other {
+      vertical-align: middle;
+      font-size: 14px;
+      color: #333;
+      text-align: center;
+      padding: 0 15px;
+      white-space: nowrap;
+    }
+  }
+}

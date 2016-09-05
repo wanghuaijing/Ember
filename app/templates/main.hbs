@@ -1,0 +1,111 @@
+{{#site-left-side}}
+    <div class="user-info">
+        <div class="avatar">
+          {{#img-loader original=avatarSrc placeholder="images/user-default.png"}}{{/img-loader}}
+        </div>
+        <div class="main drop-down">
+            <p class="name" title="{{userInfo.NickName}}">{{userInfo.NickName}}</p>
+            <p class="info">管理员</p>
+            <div class="oper">
+                <i class="fa fa-angle-down">
+
+                </i>
+            </div>
+          {{#drop-menu classNames="fix-right fadeIn"}}
+              <ul>
+                  <li>{{#link-to 'main.account.baseinfo'}}<span class="tag"><i
+                          class="fa fa-user"></i></span>个人信息{{/link-to}}</li>
+                  <li>{{#link-to 'main.account.security'}}<span class="tag"><i
+                          class="fa fa-lock"></i></span>安全设置{{/link-to}}</li>
+                  <li class="split"></li>
+                  <li><span {{action "toggleThemeDialog" true}}><span class="tag"><i
+                          class="fa fa-video-camera"></i></span>更换主题</span></li>
+                  <li>{{#link-to 'main.help'}}<span class="tag"><i
+                          class="fa fa-question-circle"></i></span>使用帮助{{/link-to}}</li>
+                  <li {{action "logout"}}><span><span class="tag"><i class="fa fa-power-off"></i></span>退出登录</span>
+                  </li>
+              </ul>
+          {{/drop-menu}}
+        </div>
+    </div>
+    <div class="sidebar">
+        <ul>
+            <li>{{#link-to "main.index" class="title"}}欢迎使用{{/link-to}}</li>
+            <li>
+                <span class="title">推荐管理<i class="fa fa-caret-down"></i></span>
+                <ul>
+                    <li>{{#link-to "main.recommend.new" class="item"}}<i class="fa fa-edit"></i>新增推荐{{/link-to}}
+                    </li>
+                    <li>{{#link-to "main.recommend.list" class="item"}}<i class="fa fa-list"></i>已发布推荐{{/link-to}}
+                    </li>
+                    <li>{{#link-to "main.recommend.stickie" class="item"}}<i
+                            class="fa fa-arrow-circle-up"></i>Banner管理{{/link-to}}
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <span class="title"><i class="fa fa-caret-down"></i>生活圈管理</span>
+                <ul>
+                    <li>{{#link-to "main.circle.new" class="item"}}<i class="fa fa-pencil"></i>发布新帖{{/link-to}}</li>
+                    <li>{{#link-to "main.circle.list" class="item"}}<i class="fa fa-list-alt"></i>帖子列表{{/link-to}}
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <span class="title"><i class="fa fa-caret-down"></i>订单管理</span>
+                <ul>
+                    <li>{{#link-to "main.ordermanage.orderlist" class="item"}}<i
+                            class="fa fa-file-text"></i>订单管理{{/link-to}}</li>
+                    <li>{{#link-to "main.ordermanage.orderdrawback" class="item"}}<i
+                            class="fa fa-file-text"></i>退款订单{{/link-to}}</li>
+                </ul>
+            </li>
+            <li>{{#link-to "main.shop.order" class="title"}}<i
+                    class="fa fa-file-text"></i>订单管理{{/link-to}}</li>
+            <li>{{#link-to "main.shop.goods" class="title"}}<i
+                    class="fa fa-cube"></i>商品管理{{/link-to}}</li>
+            <li>{{#link-to "main.shop.merchant" class="title"}}<i
+                    class="fa fa-cube"></i>商家管理{{/link-to}}</li>
+            <li>{{#link-to "main.shop.goodstemplate" class="title"}}<i
+                    class="fa fa-briefcase"></i>商品模板管理{{/link-to}}</li>
+            <li>{{#link-to "main.shop.goodsclassify" class="title"}}<i
+                    class="fa fa-suitcase"></i>商品分类管理{{/link-to}}</li>
+            <li>{{#link-to "main.shop.salescount" class="title"}}<i
+                    class="fa fa-bar-chart"></i>销量统计{{/link-to}}</li>
+            <li>{{#link-to "main.shop.salesmoney" class="title"}}<i
+                    class="fa fa-dollar"></i>销售额统计{{/link-to}}</li>
+            <li>{{#link-to "main.shop.stock" class="title"}}<i
+                    class="fa fa-pie-chart"></i>库存管理{{/link-to}}</li>
+        </ul>
+    </div>
+{{/site-left-side}}
+
+{{#modal-dialog fade=true show=toggleThemeDialog title="更换主题" width="400px"}}
+    <h3>当前主题</h3>
+    <div class="bg-{{currentTheme}} thumb thumb-x3"></div>
+    <h3>点击图块切换主题</h3>
+    <div {{action "changeTheme" "primary"}} class="bg-primary pull-left thumb thumb-x3"
+                                            style="margin:10px 10px 10px 0;"></div>
+    <div {{action "changeTheme" "caution"}} class="bg-caution pull-left thumb thumb-x3"
+                                            style="margin:10px 10px 10px 0;"></div>
+    <div {{action "changeTheme" "danger"}} class="bg-danger pull-left thumb thumb-x3"
+                                           style="margin:10px 10px 10px 0;"></div>
+    <div {{action "changeTheme" "success"}} class="bg-success pull-left thumb thumb-x3"
+                                            style="margin:10px 10px 10px 0;"></div>
+    <div {{action "changeTheme" "info"}} class="bg-info pull-left thumb thumb-x3"
+                                         style="margin:10px 10px 10px 0;"></div>
+    <div {{action "changeTheme" "dark"}} class="bg-dark pull-left thumb thumb-x3"
+                                         style="margin:10px 10px 10px 0;"></div>
+{{/modal-dialog}}
+
+{{#messager-dialog}}修改成功!{{/messager-dialog}}
+
+{{#site-body}}
+  {{#if currentlyLoading}}
+      <div class="text-center" style="color:#999;position: absolute;top:48%;left:0;right:0;">
+        {{pre-loader color="theme"}}
+      </div>
+  {{else}}
+    {{outlet}}
+  {{/if}}
+{{/site-body}}

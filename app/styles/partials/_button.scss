@@ -1,0 +1,54 @@
+/*
+ * buttons' style
+ * colors:color-collection
+ */
+.button {
+
+  @include border-radius($site-default-border-radius);
+  cursor: pointer;
+  height: $form-element-height;
+  line-height: $form-element-height;
+  font-size: 14px;
+  padding: 0 14px;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+
+  &.rounded {
+    width: $form-element-height;
+    padding: 0;
+    @include border-radius(50%);
+  }
+
+  @include button-color(#ddd);
+  &, &:link, &:visited {
+    color: #666;
+  }
+
+  &.button-block {
+    display: block;
+    width: 100%;
+  }
+
+  &.button-big {
+    font-size: 18px;
+    padding: 0 15px;
+    height: $form-element-height + 10px;
+    line-height: $form-element-height + 8px;
+    margin-right: 8px;
+  }
+
+  @each $name, $color in $color-collection {
+    &.button-#{$name} {
+      @include button-color($color);
+    }
+  }
+}
+
+a.button {
+  outline: none;
+}

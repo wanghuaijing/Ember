@@ -1,0 +1,70 @@
+<div class="site-path"><a href="javascript:;">商品管理</a></div>
+<div class="entrance slide-in-down">
+    <div class="toolbar">
+        <div class="form-group form-inline">
+            <label class="form-label">关键字:</label>
+            {{input type="text" value=keyword placeholder="商品名称/编号" class="form-control"}}
+        </div>
+        <button class="button button-theme" {{action "search"}}>查询</button>
+        {{#link-to "main.shop.goodsdetail" (query-params type="add" goodsID=-1 CategoryID=-1) class="button pull-right"}}
+            <i class="fa fa-plus"></i>
+            添加商品
+        {{/link-to}}
+    </div>
+    {{#data-pagination-view isLoading=isLoading onPageChange=(action 'search') totalCount=totalCount
+    data=pageDataList totalPage=totalPage currentPage=currentPage}}
+        <table class="table table-block  table-theme">
+            <thead>
+            <tr>
+                <th class="text-left">
+                    商品图片
+                </th>
+                <th class="text-left">
+                    ID
+                </th>
+                <th class="text-left">
+                    名称
+                </th>
+                <th>商品有效期</th>
+                <th>原价</th>
+                <th>卖价</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            {{#each pageDataList as |data|}}
+                <tr>
+                    <td style="width: 110px;">
+                        {{img-loader classNames="thumb thumb-x2" original=(file-path data.BigPhoto 4)}}
+                    </td>
+                    <td>
+                      {{data.ID}}
+                    </td>
+                    <td>
+                        {{data.Name}}
+                    </td>
+                    <td class="text-center">{{data.BeginTime}} - {{data.EndTime}}</td>
+                    <td class="text-center">{{data.MinPrimePrice}} - {{data.MaxPrimePrice}}</td>
+                    <td class="text-center">{{data.MinSellPrice}} - {{data.MaxSellPrice}}</td>
+                    <td class="text-center">
+                        {{#link-to "main.shop.goodsdetail" (query-params goodsID=data.ID type="detail"
+                        CategoryID=data.CategoryID) class="button"}}编辑{{/link-to}}
+                        <button class="button button-danger" {{action 'toggleDeleteGoodsDialog' true data}}>删除</button>
+                    </td>
+                </tr>
+            {{/each}}
+        </table>
+    {{/data-pagination-view}}
+</div>
+
+{{#modal-dialog show=showDeleteGoodsDialog width="400px" fade=true}}
+    <h4>确定要删除商品"<span class="text-danger">{{deletingGoods.Name}}</span>"吗?</h4>
+    <button class="button button-danger" {{action "deleteGoods"}}>
+        {{#if isGoodsDeleting}}
+            <i class="fa fa-spin fa-spinner"></i>
+            正在删除
+        {{else}}
+            删除
+        {{/if}}
+    </button>
+    <button {{action "toggleDeleteGoodsDialog" false}} class="button">返回</button>
+{{/modal-dialog}}

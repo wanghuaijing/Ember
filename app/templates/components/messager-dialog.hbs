@@ -1,0 +1,17 @@
+{{#if message}}
+    <div class="messager">
+        <div class="messager-dialog">
+            <!--<div class="messager-header"><span class="close" {{action 'close'}}>&times;</span></div>-->
+            <div class="messager-tag text-danger">
+                <i class="fa fa-2x fa-exclamation-circle"></i>
+            </div>
+            <div class="messager-body">
+              {{{message.msg}}}
+            </div>
+            <div class="messager-footer">
+                <button {{action 'close'}} class="pull-right button button-danger">知道了</button>
+            </div>
+        </div>
+        <div class="messager-drop"></div>
+    </div>
+{{/if}}

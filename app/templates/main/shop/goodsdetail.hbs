@@ -1,0 +1,343 @@
+<div class="site-path">
+    <a href="javascript:;" {{action 'goBack'}}>
+        <i class="fa fa-angle-left fa-2x"></i>
+        返回
+    </a>
+</div>
+<div class="entrance slide-in-down">
+  {{#pre-loader color="theme" visible=isLoading}}{{/pre-loader}}
+    <div class="toolbar">
+        {{#if isAdd}}
+            <div class="form-group form-inline">
+                <label class="form-label">商品分类</label>
+                {{laze-select onchange=(action "selectCategory")}}
+            </div>
+        {{/if}}
+        <div class="form-group form-inline">
+            <label class="form-label">商品模式</label>
+            <select class="form-control" onchange={{action 'buyTypeChange' value='target.value'}}>
+                <option value=0>团购模式</option>
+                <option value=1>普通模式</option>
+            </select>
+        </div>
+    </div>
+  {{#if goodsData}}
+      <h4>商品信息</h4>
+      <div class="block">
+          <table class="table table-noborder">
+              <tr>
+                  <td>
+                      商品名称:
+                  </td>
+                  <td style="width:300px;">
+                    {{input class="form-control form-control-block" maxlength=20 type="text" value=goodsData.Name}}
+                  </td>
+                  <td>
+                      <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,5-20字</span>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      商品编号:
+                  </td>
+                  <td style="width:300px;">
+                    {{input class="form-control form-control-block" type="text" value=goodsData.No}}
+                  </td>
+                  <td>
+                      <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填</span>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      商品运费:
+                  </td>
+                  <td>
+                    {{input class="form-control form-control-block" type="text" value=goodsData.Postage }}
+                  </td>
+                  <td>
+                      <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填</span>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      商品标签
+                  </td>
+                  <td>
+                      {{input class="form-control form-control-block" type="text" value=goodsData.Label}}
+                  </td>
+                  <td>
+                      <span style="font-size: 14px;color:#999;margin-left: 20px">多标签时, 用|分开</span>
+                  </td>
+
+              </tr>
+              <tr>
+                  <td>客服联系方式</td>
+                  <td>
+                      {{input class="form-control form-control-block" type="text" value=goodsData.CustoService.CustomerServicePhone}}
+                  </td>
+              </tr>
+              <tr>
+                  <td colspan="3">
+                      <h5>
+                          商品图片
+                          <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,1-5张</span>
+                      </h5>
+                    {{#each picsArr as |pic index|}}
+                        <div style="display: inline-block;position: relative;">
+                          {{img-loader classNames="thumb thumb-x2" tagName="div" original=(file-path pic 4) onClick=(action "showFullImage" (file-path pic))}}
+                            <div class="text-center"><span
+                                    class="cursor-pointer" {{action "deletePics" index}}>&times;</span></div>
+                        </div>
+                    {{/each}}
+                      <p></p>
+                      <button style="vertical-align: bottom;"
+                              class="button button-theme" {{action 'togglePicsUploadDialog' true}}>选择图片
+                      </button>
+                  </td>
+              </tr>
+              <tr>
+                  <td colspan="3">
+                      <h5>
+                          列表大图
+                          <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,1张</span>
+                      </h5>
+                    {{#if goodsData.Photo}}
+                      {{img-loader classNames="thumb thumb-x2" tagName="div" original=(file-path goodsData.Photo 4)
+                      onClick=(action "showFullImage" (file-path goodsData.Photo))}}
+                    {{/if}}
+                      <button style="vertical-align: bottom;"
+                              class="button button-theme" {{action 'toggleBigPhotoUploadDialog' true}}>选择图片
+                      </button>
+                  </td>
+              </tr>
+              <tr>
+                  <td colspan="3">
+                      <h5>
+                          地址图片
+                          <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,1张</span>
+                      </h5>
+                      <div style="width: 300px;">
+                        {{#if goodsData.Banner}}
+                          {{img-loader classNames="thumb thumb-x3 thumb-block" tagName="div" original=(file-path goodsData.Banner) onClick=(action "showFullImage" (file-path goodsData.Banner))}}
+                        {{/if}}
+                      </div>
+                      <p></p>
+                      <button style="vertical-align: bottom;"
+                              class="button button-theme" {{action 'toggleAddressPicUploadDialog' true}}>选择图片
+                      </button>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      限购数量:
+                  </td>
+                  <td>
+                      {{input class="form-control form-control-block " type="text" value=goodsData.BuyLimit}}
+                  </td>
+                  <td>
+                      <span style="font-size: 14px;color:#999;margin-left: 20px;">*为空为无限制</span>
+                  </td>
+              </tr>
+              {{#if goodsData.IsTuan}}
+                  <tr>
+                      <td>开团人数</td>
+                      <td>{{input value=goodsData.TuanQua class="form-control form-control-block"}}</td>
+                  </tr>
+              {{/if}}
+          </table>
+      </div>
+      <br>
+      <h4>商品特殊属性<span style="font-size: 14px;color:#999;margin-left: 20px;">*必填</span></h4>
+      <div class="block">
+          <table class="table table-noborder">
+              <tr>
+                  <td>
+                      选择属性
+                  </td>
+                  <td>
+                      <div>
+                          {{#each specialAttributes as |item|}}
+                              <span style="margin-left: 20px"><label>{{item.AttributeName}}：</label>
+                                  {{input type="checkbox" class="form-inline"
+                              checked=item.checked}}</span>
+                          {{/each}}
+                      </div>
+                  </td>
+              </tr>
+              {{#each specialAttributesChecked as |item|}}
+                  {{#if ( eq item.AttributeType.WebStyle 'image')}}
+                      <tr>
+                          <td>{{item.AttributeName}}</td>
+                          <td>
+                              {{#if item.AttributeValue}}
+                                  {{img-loader classNames="thumb thumb-x2" tagName="div" original=(file-path item.AttributeValue 4)
+                                  onClick=(action "showFullImage" (file-path item.AttributeValue))}}
+                              {{/if}}
+                              <button style="vertical-align: bottom;"
+                                      class="button button-theme" {{action 'toggleImgAttribute' true item.AttributeName}}>选择图片
+                              </button>
+                          </td>
+                      </tr>
+                  {{else}}
+                      <tr>
+                          <td>{{item.AttributeName}}</td>
+                          <td>{{input value=item.AttributeValue class="form-control"}}</td>
+                      </tr>
+                  {{/if}}
+              {{/each}}
+
+          </table>
+      </div>
+      <h4>商品购买属性<span style="font-size: 14px;color:#999;margin-left: 20px;">*必填</span></h4>
+  <div class="block">
+      <table class="table table-noborder">
+          <tr>
+              <td>
+                  选择属性
+              </td>
+              <td>
+                  <div>
+                      {{#each purchaseAttributes as |item|}}
+                          <span style="margin-left: 20px"><label>{{item.AttributeName}}：</label>
+                              {{input type="checkbox" class="form-inline"
+                              checked=item.checked}}</span>
+                      {{/each}}
+                  </div>
+              </td>
+          </tr>
+          {{#each purchaseAttributesChecked as |item|}}
+              {{#if ( eq item.AttributeType.WebStyle 'image')}}
+                  <tr>
+                      <td>{{item.AttributeName}}</td>
+                      <td>
+                          {{#if item.AttributeValue}}
+                              {{#each item.AttributeValue as |pic index|}}
+                                  <div style="display: inline-block;position: relative;">
+                                      {{img-loader classNames="thumb thumb-x2" tagName="div" original=(file-path pic 4)
+                                      onClick=(action "showFullImage" (file-path item.AttributeValue))}}
+                                      <div class="text-center"><span
+                                              class="cursor-pointer" {{action "deleteAttributePics" index item.AttributeName}}>&times;</span></div>
+                                  </div>
+                              {{/each}}
+                          {{/if}}
+                          <button style="vertical-align: bottom;"
+                                  class="button button-theme" {{action 'toggleImgAttributePur' true item.AttributeName}}>选择图片
+                          </button>
+                      </td>
+                  </tr>
+              {{else}}
+                  <tr>
+                      <td>{{item.AttributeName}}</td>
+                      <td>
+                          {{#if item.AttributeValue}}
+                              {{#each (arrayToObjlist item.AttributeValue) as |i index|}}
+                                  <div class="form-group form-inline">
+                                      {{input class="form-control " maxlength=20 type="text" value=i.value}}
+                                  </div>
+                                      <div class="text-center" style="display: inline-block"><span
+                                              class="cursor-pointer" {{action "deleteAttributePics"
+                                          index item.AttributeName}}>&times;</span></div>
+                              {{/each}}
+
+                          {{/if}}
+                          <button class="button button-theme"
+                                  onclick={{action "addAttribute" item.AttributeName}}>添加</button>
+                      </td>
+                  </tr>
+              {{/if}}
+          {{/each}}
+          <tr>
+              <td>价格和库存</td>
+              <td>
+                  <div class="form-group form-inline" style="vertical-align: bottom">
+                      {{#if tableData}}
+                          <table class="table table-block  table-theme" style="background-color: #f0f0f0">
+                              <thead>
+                              <tr>
+                                  {{#each tableHead as |head|}}
+                                      <th>
+                                          {{head}}
+                                      </th>
+                                  {{/each}}
+                              </tr>
+                              </thead>
+                              {{#each stocks as |tr|}}
+                                  <tr>
+                                      {{#each (objToArray tr.AttributesContent) as |td|}}
+                                          <td>{{td}}</td>
+                                      {{/each}}
+                                      <td>{{input value=tr.Stock class="form-control special"}}</td>
+                                      <td>{{input value=tr.OrigiPrice class="form-control special"}}</td>
+                                      <td>{{input value=tr.SellPrice class="form-control special"}}</td>
+                                  </tr>
+                              {{/each}}
+                          </table>
+                      {{/if}}
+                  </div>
+                  <div class="form-group form-inline">
+                      <button class="button button-theme" style="vertical-align: bottom"
+                              onclick={{action "getTableData" }}>生成表格</button>
+                  </div>
+              </td>
+          </tr>
+          {{#each StockPriceConfig as |item|}}
+              <tr>
+                  <td>默认</td>
+                  <td>{{input class="form-control special" value=item.Stock placeholder="商品库存"}}
+                      {{input value=item.OrigiPrice class="form-control special" placeholder="商品原价"}}
+                      {{input value=item.SellPrice class="form-control special" placeholder="商品卖价"}}</td>
+                  <td><span style="font-size: 14px;color:#999;margin-left: 20px;">若不设置商品购买属性，请输入商品价格和库存</span></td>
+
+              </tr>
+          {{/each}}
+      </table>
+  </div>
+      <br>
+      <!--<h4>商品标签<span style="font-size: 14px;color:#999;margin-left: 20px;">*可选,0-3个</span></h4>-->
+      <!--<div class="block">-->
+      <!--<div class="goods-label">ddddd</div>-->
+      <!--<div class="goods-label active">ddddd</div>-->
+      <!--<div class="goods-label active">ddddd</div>-->
+      <!--<div class="goods-label active">ddddd</div>-->
+      <!--</div>-->
+      <!--<br>-->
+      <h4>有效期<span style="font-size: 14px;color:#999;margin-left: 20px;">*必填</span></h4>
+      <div class="block">
+        {{date-picker dateValue=goodsData.BeginTime}}
+          至
+        {{date-picker dateValue=goodsData.EndTime}}
+      </div>
+      <br>
+      <h4>商品详情</h4>
+    {{#media-editor onInit=(action "editorLoaded") initialData=goodsData.Content}}
+        <textarea style="width:700px;height:400px;"></textarea>
+    {{/media-editor}}
+      <p>
+          <button style="vertical-align: bottom; margin-top: 5px"
+                  class="button button-theme" {{action 'toggleContentPicUploadDialog' true}}>插入图片
+          </button>
+      </p>
+      <button class="button button-theme button-big"  {{action "submit"}}>
+        {{#if isSubmiting}}
+            <i class="fa fa-spin fa-spinner"></i>
+        {{else}}
+            提交
+        {{/if}}
+      </button>
+      <button class="button button-big" {{action "reset"}}>重置数据</button>
+  {{/if}}
+  {{file-uploader onUploaded=(action "bigPhotoUploaded") multiple=false show=showBigPhotoUploadDialog}}
+  {{file-uploader beforeUpload=(action "beforePicsUpload") onUploaded=(action "picsUploaded") multiple=true
+  show=showPicsUploadDialog}}
+  {{file-uploader onUploaded=(action "contentPicUploaded") multiple=true show=showInsertContentPicDialog}}
+  {{file-uploader onUploaded=(action "addressPicUploaded") multiple=true show=showAddressPicUploadDialog}}
+    {{file-uploader onUploaded=(action "specialImgUpload") multiple=true show=imgAttributeShow}}
+    {{file-uploader onUploaded=(action "purchaseImgUpload") multiple=true show=imgAttributeShowPur}}
+  {{#if autoSavedInfoShow}}
+      <span class="animated fadeOut text-info"
+            style="position:fixed;right:40px;bottom:40px;animation-delay: 2s; animation-duration: 1s;">
+      <i class="fa fa-info-circle"></i>
+          自动保存成功
+      </span>
+  {{/if}}
+</div>

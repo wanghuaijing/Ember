@@ -1,0 +1,75 @@
+@each $name, $color in $color-collection {
+  body.theme-#{$name} {
+    .site-left-side {
+      background-color: $color;
+      color: #fff;
+      //@include box-shadow(1px 0 4px $color);
+
+      .collapse-tag {
+        background-color: transparent;
+        &:after {
+          border-color: #fff;
+        }
+
+        i {
+          color: #fff;
+          background-color: $color;
+        }
+      }
+    }
+
+    .sidebar {
+      ul {
+        .title {
+          background-color: $color;
+        }
+
+        .title, .item {
+          &:hover {
+            background-color: lighten($color, 5%);
+          }
+
+          &.active {
+            background-color: darken($color, 10%);
+          }
+        }
+      }
+    }
+
+    //button
+    .button-theme {
+      @include button-color($color);
+    }
+
+    //background
+    .bg-theme {
+      background-color: $color !important;
+    }
+
+    //text color
+    .text-theme {
+      color: $color !important;
+    }
+
+    //pagination bg
+    .pagination.pagination-theme {
+      .item {
+        @include pagination-color($color);
+      }
+    }
+
+    //pre-loader color
+    .preloader.preloader-theme {
+      .lo {
+        background-color: $color
+      }
+    }
+
+    .table.table-theme{
+      th{
+        background-color: $color !important;
+        color:#fff;
+      }
+    }
+  }
+}

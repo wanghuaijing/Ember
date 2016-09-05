@@ -1,0 +1,141 @@
+<div class="site-path"><a href="javascript:;">商品分类管理</a></div>
+<div class="entrance slide-in-down">
+    <div class="toolbar">
+        <div class="form-group form-inline">
+            <label class="form-label">关键字:</label>
+            {{input type="text" value=keyword placeholder="分类名称" class="form-control"}}
+        </div>
+            <div class="form-group form-inline">
+                <label class="form-label">分类选择:</label>
+                {{laze-select onchange=(action "onchange")}}
+            </div>
+        <button class="button button-theme" {{action "search"}}>查询</button>
+        <div class="form-group form-inline pull-right">
+            <button class="button button-success" {{action "addNew" data.ID}}>新建一级分类</button>
+        </div>
+    </div>
+    {{#data-pagination-view isLoading=isLoading onPageChange=(action 'search')
+    totalCount=totalCount data=pageDataList totalPage=totalPage currentPage=currentPage}}
+        <table class="table table-block table-hover table-theme">
+            <thead>
+
+            <tr>
+                <th>
+                    分类名称
+                </th>
+                <th>
+                    有无商品模板
+                </th>
+                <th>
+                    商品数量
+                </th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each listIsShow as |data|}}
+                <tr >
+                    <td class="text-left" ><div style= {{css-style "display: inline-block;" "width:" data.depth "px"}}>
+                    </div><i class={{if data.isExpend "fa fa-angle-down"  "fa fa-angle-right" }} onclick={{action "addList" data}}></i>{{data.Name}}</td>
+                    <td class="text-center">{{if data.IsExistTemplate '有' '无' }}</td>
+                    <td class="text-center">{{data.GoodsQua}}</td>
+                    <td class="text-center">
+                        <button class="button button-success" {{action "add" data.ID}}>创建子类</button>
+                        <button class="button button-primary" {{action 'edit' data.ID data.ParentID}}>编辑</button>
+                        <button class="button button-danger" {{action 'deleteClick' data.ID}}>删除</button>
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    {{/data-pagination-view}}
+    {{#modal-dialog title="新建分类" show=showWatchingAddDialog fade=true width="500px;"
+    info = info
+    tool=true confirm=(action "confirm" )}}
+        {{#pre-loader color="theme" visible=isWatchingAddLoading}}{{/pre-loader}}
+            <table class="form-table">
+                <tr>
+                    <td class="label">
+                        分类名称:
+                    </td>
+                    <td>
+                        {{input class="form-control" value=template.Name }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        备注
+                    </td>
+                    <td>
+                        {{textarea class="form-control" value=template.Brief}}
+                    </td>
+                </tr>
+
+            </table>
+    {{/modal-dialog}}
+    {{#modal-dialog title="编辑分类" show=showWatchingEditDialog fade=true width="500px;"
+    info = info tool=true confirm=(action "confirmEdit" )}}
+        {{#pre-loader color="theme" visible=isWatchingEditLoading}}{{/pre-loader}}
+        <table class="form-table">
+            <tr>
+                <td class="label">
+                    分类名称:
+                </td>
+                <td>
+                    {{input class="form-control" value=templateEdit.Name }}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    备注
+                </td>
+                <td>
+                    {{textarea class="form-control" value=templateEdit.Brief}}
+                </td>
+            </tr>
+
+        </table>
+    {{/modal-dialog}}
+    {{#modal-dialog title="删除分类" show=showWatchingDeleteDialog fade=true width="500px"
+    info=info tool=true confirm=(action "confirmDelete")}}
+        <p>
+            是否删除分类？
+        </p>
+    {{/modal-dialog}}
+    {{#modal-dialog title="新建一级分类" show=showWatchingNewDialog fade=true width="500px;"
+    info = newInfo
+    tool=true confirm=(action "addNewConfirm" )}}
+        {{#pre-loader color="theme" visible=false}}{{/pre-loader}}
+        <table class="form-table">
+            <tr>
+               <td class="label">
+                   是否是虚拟商品
+               </td>
+                <td>
+                    <select class="form-control" onchange={{action 'typeChange' value='target.value'}}>
+                        <option>选择</option>
+                        <option value=0>虚拟商品</option>
+                        <option value=1>实体商品</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    分类名称:
+                </td>
+                <td>
+                    {{input class="form-control" value=template.Name }}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    备注
+                </td>
+                <td>
+                    {{textarea class="form-control" value=template.Brief}}
+                </td>
+            </tr>
+
+        </table>
+    {{/modal-dialog}}
+</div>

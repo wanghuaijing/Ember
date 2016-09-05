@@ -1,0 +1,127 @@
+/**
+ * form style
+ */
+
+%form-control-base {
+  $border-color: $site-default-border-color;
+  display: inline-block;
+  height: $form-element-height; //fix placeholder drop down
+  line-height: (20px/14px);
+  border-radius: 0;
+  border: solid 1px $border-color;
+  outline: none;
+  padding: ($form-element-height - 22px)/2 6px;
+  //box-shadow: 0 0 2px rgba(0, 0, 0, .1);
+  font-size: 14px;
+  vertical-align: middle;
+  &:focus {
+    border-color: darken($border-color, 10%);
+    //box-shadow: 0 0 6px rgba(0, 0, 0, .16);
+  }
+  margin-right: 5px;
+  background-color: #fff;
+  @include box-sizing(border-box);
+  &:active, &:focus {
+    outline: none;
+  }
+  @include border-radius($site-default-border-radius);
+
+  &:disabled {
+    background-color: #ddd;
+  }
+
+  &.form-control-block {
+    width: 100%;
+  }
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="checkbox"],
+input[type="date"] {
+  &.form-inline{
+    vertical-align: middle;
+  }
+  &.form-control {
+    @extend %form-control-base;
+    width: 170px;
+    &.special{
+      width: 80px;
+    }
+  }
+}
+
+select.form-control {
+  @extend %form-control-base;
+  height: $form-element-height;
+  line-height: $form-element-height - 2px;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 0;
+}
+
+textarea.form-control {
+  @extend %form-control-base;
+  height: auto;
+  line-height: normal;
+  //padding: 6px 10px;
+}
+
+.form-group {
+  display: block;
+  font-size: 14px;
+  .form-label {
+    display: block;
+    padding-bottom: 8px;
+  }
+  .form-control {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  &.form-inline {
+    margin-bottom: 10px;
+    display: inline-block;
+    .form-label {
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .form-control {
+      display: inline-block;
+      width: auto;
+    }
+  }
+
+  &.form-group-big {
+    font-size: 18px;
+    .form-label {
+    }
+    .form-control {
+      height: $form-element-height * 1.2;
+      line-height: (24px / 18px);
+      padding: ($form-element-height * 1.2 - 24px)/2 12px;
+      font-size: 18px;
+    }
+
+    select.form-control {
+      height: $form-element-height * 1.2 + 2px;
+    }
+  }
+}
+
+table.form-table {
+  width: 100%;
+  box-sizing: border-box;
+  td.label {
+    padding-right: 10px;
+    width: 65px;
+    white-space: nowrap;
+  }
+  td {
+    padding: 4px 0;
+  }
+}

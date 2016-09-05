@@ -1,0 +1,4 @@
+{{#each items as |item index|}}
+    <span class="item {{if item.isActive 'active'}}" {{action 'pageChange' item.val}}>{{item.view}}</span>
+{{/each}}
+{{yield}}

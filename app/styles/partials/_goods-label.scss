@@ -1,0 +1,12 @@
+.goods-label {
+  padding: 6px 12px;
+  border: solid 1px #666;
+  display: inline-block;
+  cursor: pointer;
+
+  margin:0 5px;
+  &.active {
+    color: #fff;
+    background-color: #666;
+  }
+}

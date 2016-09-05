@@ -1,0 +1,82 @@
+.banner-list {
+  @include clearfixed();
+  $arrow-offset: 15px;
+  margin: -5px;
+  .item {
+    width: 20%;
+    float: left;
+    padding: 5px;
+    box-sizing: border-box;
+    display: inline-block;
+    .banner {
+      position: relative;
+      border: solid 2px transparent;
+      cursor: pointer;
+      //@include box-shadow(0 1px 6px rgba(0, 0, 0, 0.46));
+
+      .desc {
+        position: absolute;
+        background-color: transparentize($color-info, .2);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #fff;
+        height: 26px;
+        line-height: 26px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0 5px;
+      }
+
+      &.active {
+        border-color: $color-primary;
+        @include box-shadow(0 1px 9px $color-primary);
+      }
+
+      &:hover {
+        //border-color: #999;
+        .mask {
+          opacity: 1;
+          .arrow-left {
+            left: $arrow-offset;
+          }
+
+          .arrow-right {
+            right: $arrow-offset;
+          }
+        }
+      }
+
+      .mask {
+        @include transition(all .3s ease);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        color: #Fff;
+        .arrow-left, .arrow-right {
+          position: absolute;
+          top: 50%;
+          font-size: 40px;
+          margin-top: -25px;
+          @include transition(left .3s ease, right .3s ease);
+          &:hover {
+            color: $color-grey;
+          }
+        }
+
+        .arrow-left {
+          left: -$arrow-offset;
+        }
+
+        .arrow-right {
+          right: -$arrow-offset;
+        }
+      }
+    }
+  }
+}

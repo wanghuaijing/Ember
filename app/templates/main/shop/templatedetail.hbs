@@ -1,0 +1,197 @@
+<div class="site-path">
+    <a href="javascript:;" {{action 'goBack'}}>
+        <i class="fa fa-angle-left fa-2x"></i>
+        返回
+    </a>
+</div>
+{{#pre-loader color="theme" visible=isLoading}}{{/pre-loader}}
+<h4>模板信息</h4>
+{{#if goodsTemplate}}
+    <div class="block">
+        <h5>所属分类：{{categoryName}}</h5>
+        <div class="block">
+            <h5>默认属性</h5>
+            <table  class="table table-block table-hover table-theme">
+                <thead>
+                <tr>
+                    <th>属性名称</th>
+                    <th>类型</th>
+                    <th>是否必填</th>
+                    <th>特殊限制</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="block">
+            <h5>商品特殊属性</h5>
+            <div class="toolbar">
+                <div class="form-group form-inline">
+                    <button class="button button-theme" onclick={{action 'specialAdd'}}>添加</button>
+                </div>
+            </div>
+            <table  class="table table-block table-hover table-theme">
+                <thead>
+                <tr>
+                    <th>属性名称</th>
+                    <th>类型</th>
+                    <th>是否必填</th>
+                    <th>特殊限制</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {{#each specialListKey as |data|}}
+                        <tr>
+                            <td class="text-center">
+                                {{input type="text"  value=data.AttributeName
+                                class="form-control special"}}
+                            </td>
+                            <td class="text-center">
+                                <select class="form-control special" onchange={{action 'specialTypeChange' data.key}}>>
+                                    {{#each attributeType as |item|}}
+                                        {{#if (eq item.AttributeTypeID data.AttributeTypeID)}}
+                                            <option selected value={{item.AttributeTypeID}}>{{item.AttributeTypeName}}</option>
+                                        {{else}}
+                                            <option value={{item.AttributeTypeID}} >
+                                                {{item.AttributeTypeName}}
+                                            </option>
+                                        {{/if}}
+                                    {{/each}}
+
+                                </select>
+                            </td>
+
+                            <td class="text-center">
+                                {{#if data.IsNew}}
+                                    {{#if  (toboolean isExistGoods)}}
+                                        {{if data.IsNecessary '是' '否'}}
+                                    {{else}}
+                                        <select class="form-control special"
+                                                onchange={{action 'SIsNecessaryChange' data.key}}>
+                                            <option value="true">是</option>
+                                            <option value="false">否</option>
+                                        </select>
+                                    {{/if}}
+                                {{else}}
+                                    {{if data.IsNecessary '是' '否'}}
+                                {{/if}}
+                            </td>
+                            <td class="text-center">
+                                {{input type="text" value=data.Constraint input=(action 'onchange')
+                                class="form-control special" }}
+                            </td>
+                            <td class="text-center">
+                                {{#if isExistGoods}}
+                                    {{#if data.IsNew}}
+                                        <button class="button button-danger"
+                                                onclick={{action 'specialDelete'  data.key}}>删除</button>
+                                    {{else}}
+                                        <button class="button button-default"
+                                        >删除</button>
+                                    {{/if}}
+                                {{else }}
+                                    <button class="button button-danger"
+                                            onclick={{action 'specialDelete'  data.key}}>删除</button>
+                                {{/if}}
+                            </td>
+
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <div class="block">
+            <h5>购买特殊属性</h5>
+            <div class="toolbar">
+                <div class="form-group form-inline">
+                    <button class="button button-theme" onclick={{action 'purchaseAdd'}}>添加</button>
+                </div>
+            </div>
+            <table  class="table table-block table-hover table-theme">
+                <thead>
+                <tr>
+                    <th>属性名称</th>
+                    <th>类型</th>
+                    <th>是否必填</th>
+                    <th>特殊限制</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {{#each purchaseListKey as |data|}}
+                        <tr>
+                            <td class="text-center">
+                                {{input type="text" name="AttributeName" value=data.AttributeName
+                                class="form-control special"}}
+                            </td>
+                            <td class="text-center">
+                                <select class="form-control special" onchange={{action 'purchaseTypeChange' data.key}}>
+                                    {{#each attributeType as |item|}}
+                                        {{#if (eq item.AttributeTypeID data.AttributeTypeID)}}
+                                            <option selected value={{item.AttributeTypeID}}>{{item.AttributeTypeName}}</option>
+                                        {{else}}
+                                            <option value={{item.AttributeTypeID}} >
+                                                {{item.AttributeTypeName}}
+                                            </option>
+                                        {{/if}}
+                                    {{/each}}
+
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                {{#if data.IsNew}}
+                                    {{#if isExistGoods}}
+                                        {{if data.IsNecessary '是' '否'}}
+                                    {{else}}
+                                        <select class="form-control special"
+                                                onchange={{action 'PIsNecessaryChange' data.key}}>
+                                            <option value="true">是</option>
+                                            <option value="false">否</option>
+                                        </select>
+                                    {{/if}}
+                                {{else}}
+                                    {{if data.IsNecessary '是' '否'}}
+                                {{/if}}
+                            </td>
+                            <td class="text-center">
+                                {{input type="text" value=data.Constraint input=(action 'onchange')
+                                class="form-control special" }}
+                            </td>
+                            <td class="text-center">
+                                {{#if isExistGoods}}
+                                    {{#if data.IsNew}}
+                                        <button class="button button-danger"
+                                                onclick={{action 'purchaseDelete'  data.key}}>删除</button>
+                                    {{else}}
+                                        <button class="button button-default"
+                                                >删除</button>
+                                    {{/if}}
+                                {{else }}
+                                    <button class="button button-danger"
+                                            onclick={{action 'purchaseDelete'  data.key}}>删除</button>
+                                {{/if}}
+                            </td>
+
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <button class="button button-theme button-big"  {{action "submit"}}>
+        {{#if isSubmiting}}
+            <i class="fa fa-spin fa-spinner"></i>
+        {{else}}
+            提交
+        {{/if}}
+    </button>
+    {{#if autoSavedInfoShow}}
+        <span class="animated fadeOut text-info"
+              style="animation-delay: 2s; animation-duration: 1s;">
+      <i class="fa fa-info-circle"></i>
+          自动保存成功
+      </span>
+    {{/if}}
+{{/if}}

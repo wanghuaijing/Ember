@@ -1,0 +1,60 @@
+<div class="site-path">账户中心<span class="split"></span>个人信息</div>
+<div class="entrance slide-in-down">
+    <table class="form-table" style="width: 400px;">
+        <tr>
+            <td class="label">
+                账号:
+            </td>
+            <td>
+              {{userInfoData.Name}}
+                <span class="text-info"><i class="fa fa-paw"></i> {{userInfoData.RegTime}}</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">
+                头像:
+            </td>
+            <td>
+                <span {{action "toggleUploadDialog" true}}>
+                  {{img-loader original=avatarUrl classNames="thumb thumb-x2" tagName="div"}}
+                </span>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label">
+                昵称:
+            </td>
+            <td>
+              {{input type="text" value=userInfoData.NickName class="form-control form-control-block" placeholder="请输入昵称"}}
+            </td>
+        </tr>
+        <tr>
+            <td class="label">
+                个性签名:
+            </td>
+            <td>
+              {{textarea type="text" rows="4" maxLength="100" value=userInfoData.Sign class="form-control form-control-block" placeholder="请输入个性签名"}}
+                <span class="pull-right text-grey">剩余可输入{{leftWordsCount}}个字</span>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button class="button button-theme" {{action "submit"}}>
+                  {{#if submiting}}
+                      <i style="font-size:16px;" class="fa fa-spin fa-spinner"></i>
+                  {{else}}
+                      保存修改
+                  {{/if}}
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+{{#modal-dialog fade=true width="500px" show=showUploadDialog title="上传图片"}}
+  {{#file-picker percent=uploadPercent onFileChange=(action "upload")}}{{/file-picker}}
+{{/modal-dialog}}
+
+{{outlet}}

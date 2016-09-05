@@ -1,0 +1,106 @@
+
+$order-view-border-color: #ddd;
+.goods-view {
+  $padding-size: 10px;
+  $thumb-size: 100px;
+  border-bottom: solid 1px $order-view-border-color;
+  &:last-of-type {
+    border-bottom: none;
+  }
+  > table {
+    width: 100%;
+    .goods-img {
+      padding: 10px;
+      width: $thumb-size;
+      > div {
+        @include background-size(cover);
+        background-position: center;
+        height: $thumb-size;
+        box-sizing: border-box;
+        padding:2px;
+        @include background-clip(content-box);
+        border: solid 1px $order-view-border-color;
+      }
+    }
+    .goods-desc {
+      padding: $padding-size;
+      vertical-align: top;
+      p.name {
+        height: 2em;
+        margin-bottom: 5px;
+        padding-top: 0;
+      }
+      p:not(:first-of-type) {
+        font-size: 12px;
+        color: #999;
+        padding-top: 10px;
+      }
+    }
+  }
+}
+
+.order-view {
+  background-color: #fefefe;
+  border: solid 1px $order-view-border-color;
+  @include border-radius($site-default-border-radius);
+  margin: 10px 0;
+
+  //@include transition(all .2s linear);
+
+  &.block-view {
+    background-color: $color-block-bg;
+    border: none;
+    &:hover {
+      .view-title {
+        border-bottom-color: #ccc;
+      }
+    }
+    .view-title {
+      background-color: $color-block-bg;
+      border-bottom-color: #ccc;
+    }
+  }
+
+  &:hover {
+    border-color: #bbb;
+  //  //box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  //  .view-title {
+  //    border-color: #bbb;
+  //  }
+  }
+
+  .view-title {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+    background-color: #f5f5f5;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    .t {
+      margin-right: 30px;
+    }
+    border-bottom: solid 1px $order-view-border-color;
+  }
+
+  .view-content {
+    $padding-size: 10px;
+    > table {
+      width: 100%;
+      td.goods-area {
+      }
+      td.operation-area {
+        vertical-align: top;
+        width: 100px;
+        padding: 10px;
+        border-left: solid 1px $order-view-border-color;
+        .button {
+          margin-bottom: 5px;
+          &:last-of-type {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+<div class="site-path"><a href="javascript:;">商家管理</a></div>
+<div class="entrance slide-in-down">
+    <div class="toolbar">
+        <div class="form-group form-inline">
+            <label class="form-label">关键字:</label>
+            {{input type="text" value=keyword placeholder="商家名称" class="form-control"}}
+        </div>
+        <button class="button button-theme" {{action "search"}}>查询</button>
+        <div class="form-group form-inline pull-right">
+            {{#link-to "main.shop.merchantDetaile" (query-params type="add" ID=-1) class="button pull-right"}}
+                <i class="fa fa-plus"></i>
+                添加商家
+            {{/link-to}}
+        </div>
+    </div>
+    {{#data-pagination-view isLoading=isLoading onPageChange=(action 'search') totalCount=totalCount data=pageDataList totalPage=totalPage currentPage=currentPage}}
+        <table class="table table-block  table-theme">
+            <thead>
+            <tr>
+                <th>商家</th>
+                <th>商家经营范围</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            {{#each pageDataList as |data|}}
+                <tr>
+                    <td class="text-left" >
+                        {{img-loader classNames="thumb thumb-x1 " tagName="div" original=(file-path data.Image) onClick=(action "showFullImage" (file-path data.Image))}}
+                        {{data.Name}}</td>
+                    <td class="text-center">{{data.Bussiness}}</td>
+                    <td class="text-center">
+                        {{#link-to "main.shop.merchantDetaile" (query-params ID=data.ID type="detail") class="button"}}编辑{{/link-to}}
+                        <button class="button button-danger" {{action 'deleteClick' data.ID}}>删除</button>
+                    </td>
+                </tr>
+            {{/each}}
+        </table>
+    {{/data-pagination-view}}
+</div>
+{{outlet}}

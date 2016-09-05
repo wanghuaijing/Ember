@@ -1,0 +1,83 @@
+<div class="site-path">
+    <a href="javascript:;" {{action 'goBack'}}>
+        <i class="fa fa-angle-left fa-2x"></i>
+        返回
+    </a>
+</div>
+<div class="entrance slide-in-down">
+    {{#pre-loader color="theme" visible=isLoading}}{{/pre-loader}}
+        <h4>商家信息</h4>
+        <div class="block">
+            <table class="table table-noborder">
+                <tr>
+                    <td>商家名称</td>
+                    <td>{{input value=merchantInfo.Name class="form-control form-control-block"}}</td>
+                </tr>
+                <tr>
+                    <td>商家电话</td>
+                    <td>{{input value=merchantInfo.Phone class="form-control form-control-block"}}</td>
+                </tr>
+                <tr>
+                    <td><h5>
+                        商家图片
+                        <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,1张</span>
+                    </h5>
+                        <div >
+                            {{#if merchantInfo.Image}}
+                                {{img-loader classNames="thumb thumb-x2 " tagName="div" original=(file-path merchantInfo.Image) onClick=(action "showFullImage" (file-path merchantInfo.Image))}}
+                            {{/if}}
+                        </div>
+                        <p></p>
+                        <button style="vertical-align: bottom;"
+                                class="button button-theme" {{action 'toggleMerchantPicUploadDialog' true}}>选择图片
+                        </button></td>
+                </tr>
+                <tr>
+                    <td>促销信息</td>
+                    <td>{{input value=merchantInfo.SaleNote placeholder="促销信息" class="form-control "}}
+                        {{input value=merchantInfo.Discount placeholder="折扣" class="form-control special"}}
+                        </td>
+                </tr>
+                <tr>
+                    <td>商家来源</td>
+                    <td>{{input value=merchantInfo.Source class="form-control form-control-block"}}</td>
+                </tr>
+                <tr>
+                    <td>商家地址</td>
+                    <td>{{input value=merchantInfo.Address class="form-control form-control-block"}}</td>
+                </tr>
+                <tr>
+                    <td>商家属性</td>
+                    <td>{{input value=merchantInfo.Attribute class="form-control form-control-block"}}</td>
+                </tr>
+                <tr>
+                    <td>商家经营范围</td>
+                    <td>{{input value=merchantInfo.Bussiness class="form-control form-control-block"}}</td>
+                </tr>
+                <tr>
+                    <td>商家评论数</td>
+                    <td>{{input value=merchantInfo.Qua class="form-control form-control-block"}}</td>
+                </tr>
+                <tr>
+                    <td>商家等级</td>
+                    <td>{{input value=merchantInfo.Star class="form-control form-control-block"}}</td>
+                </tr>
+                <tr>
+                    <td>商家介绍</td>
+                    <td>
+                        {{textarea  value=merchantInfo.Brief class="form-control form-control-block"}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    <br>
+    <button class="button button-theme button-big"  {{action "submit"}}>
+        {{#if isSubmiting}}
+            <i class="fa fa-spin fa-spinner"></i>
+        {{else}}
+            提交
+        {{/if}}
+    </button>
+    <button class="button button-big" {{action "reset"}}>重置数据</button>
+</div>
+{{file-uploader onUploaded=(action "merchantPicUploaded") multiple=true show=isShowImg}}

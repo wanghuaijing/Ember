@@ -1,0 +1,21 @@
+<div class="modal {{if fade 'fade'}} {{if show 'modal-open'}}">
+    <div class="modal-dialog">
+        <div class="modal-content" style={{style}}>
+            <div class="modal-header">
+                <div class="modal-title">{{{title}}}</div>
+                <span class="close" {{action "close"}}>&times;</span>
+            </div>
+            <div class="modal-body">
+              {{yield}}
+            </div>
+            {{#if tool}}
+                <div class="modal-tool">
+                    <span class="text-success">{{info}}</span>
+                    <button class="button button-success" onclick={{action "confirm"}}>确定</button>
+                    <button class="button button-danger" onclick={{action "close"}}>取消</button>
+                </div>
+            {{/if}}
+        </div>
+        <div class="modal-drop {{if show 'open'}}"  {{action "close"}}></div>
+    </div>
+</div>
