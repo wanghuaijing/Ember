@@ -1,7 +1,7 @@
 {{#if order}}
     <div class="view-title">
         <span class="t">{{order.OrderTime.Submit}}</span>
-        <span class="t">订单号:{{order.OrderNum}}</span>
+        <span class="t">订单号:{{order.OrderNo}}</span>
         <span class="t">状态:{{order.OrderStatusName}}</span>
         <span class="t">订单金额:￥{{order.TotalPrice}}</span>
     </div>
@@ -14,7 +14,7 @@
                           <table>
                               <tr>
                                   <td class="goods-img">
-                                    {{img-loader tagName="div" original=(file-path goods.BigPhoto 4)}}
+                                    {{img-loader tagName="div" original=(file-path goods.Photo 4)}}
                                   </td>
                                   <td class="goods-desc">
                                       <p class="name">{{goods.Name}}</p>
@@ -35,7 +35,7 @@
                   <td class="operation-area">
                       <button class="button button-block" {{action "operate" "detail"}}>订单详情</button>
                     {{#if showOutTicket}}
-                        <button class="button button-block" {{action "operate" "outTicket"}}>完成出票</button>
+                        <button class="button button-block" {{action "operate" "outTicket"}}>发货/出票</button>
                     {{/if}}
                     {{#if showCancel}}
                         <button class="button button-block" {{action "operate" "delete"}}>取消订单</button>
@@ -43,6 +43,9 @@
                     {{#if showRefund}}
                         <button class="button button-block" {{action "operate" "refund"}}>审核退款</button>
                     {{/if}}
+                      {{#if showRefresh}}
+                          <button class="button button-block" {{action "operate" "refund"}}>更新退款</button>
+                      {{/if}}
                   </td>
               {{/unless}}
             </tr>

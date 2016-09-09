@@ -6,26 +6,61 @@ export default Ember.Component.extend({
   showCancel: Ember.computed('order', function () {
     if(!this.get('order'))return;
     let status = this.get('order').OrderStatus;
+    let isBack = this.get('order').isBack;
     let orderTypes = this.get('enum').orderType;
-    if(orderTypes.NOT_PAYED&&orderTypes.NOT_OUT_TICKET){
-      return status === orderTypes.NOT_PAYED.value || status === orderTypes.NOT_OUT_TICKET.value;
+    if(isBack){
+      return false
+    }else {
+      if(orderTypes.NOT_PAYED&&orderTypes.NOT_OUT_TICKET){
+        return status === orderTypes.NOT_PAYED.value || status === orderTypes.NOT_OUT_TICKET.value;
+      }else {
+        return false
+      }
     }
   }),
   showOutTicket: Ember.computed('order', function () {
     if(!this.get('order'))return;
     let status = this.get('order').OrderStatus;
     let orderTypes = this.get('enum').orderType;
-    if(orderTypes.NOT_OUT_TICKET){
-      return status === orderTypes.NOT_OUT_TICKET.value;
+    let isBack = this.get('order').isBack;
+    if(isBack){
+      return false
+    }else{
+      if(orderTypes.NOT_OUT_TICKET){
+        return status === orderTypes.NOT_OUT_TICKET.value;
+      }else {
+        return false
+      }
     }
   }),
   showRefund: Ember.computed('order', function () {
     if(!this.get('order'))return;
-    let status = this.get('order').OrderStatus;
-    let orderTypes = this.get('enum').orderType;
-    console.log(1)
-    if(orderTypes.REFUNDS_UNCHECK){
-      return status === orderTypes.REFUNDS_UNCHECK.value;
+    let isBack = this.get('order').isBack;
+    if(isBack){
+      let status = this.get('order').Vendors.Goods[0].RefundContent[0].RefundStatus;
+      let orderTypes = this.get('enum').returnOrder;
+      if(orderTypes.REFUNDS_UNCHECK){
+        return status === orderTypes.REFUNDS_UNCHECK.value;
+      }else {
+        return false
+      }
+    }else {
+      return false
+    }
+  }),
+  showRefresh:Ember.computed('order', function () {
+    if(!this.get('order'))return;
+    let isBack = this.get('order').isBack;
+    if(isBack){
+      let status = this.get('order').Vendors.Goods[0].RefundContent[0].RefundStatus;
+      let orderTypes = this.get('enum').returnOrder;
+      if(status === orderTypes.REFUNDS_UNCHECK.value){
+        return false
+      }else {
+        return true
+      }
+    }else {
+      return false
     }
   }),
   actions:{

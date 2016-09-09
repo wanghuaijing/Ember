@@ -38,6 +38,8 @@ Router.map(function() {
       this.route('templatedetail');
       this.route('merchant');
       this.route('merchantDetaile');
+      this.route('bannerlist');
+      this.route('bannerdetail');
     });
 
     this.route('ordermanage', function() {

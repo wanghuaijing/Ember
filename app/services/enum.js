@@ -76,5 +76,18 @@ export  default Ember.Service.extend({
       name:'实物',
       value:1
     }
+  ],
+  bannerType:[
+    {
+      desc:'全部'
+    },
+    {
+      desc:'广告',
+      value:'广告'
+    },
+    {
+      desc:'商品',
+      value:'商品'
+    }
   ]
 });

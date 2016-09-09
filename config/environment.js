@@ -27,12 +27,12 @@ module.exports = function(environment) {
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
     ENV.APP.APIHOST = 'http://182.92.165.152:8081/api';
-    ENV.SelfShopID = 4;
+    ENV.SelfShopID = 7;
   }
 
   if(environment === 'production'){
     ENV.APP.APIHOST = 'http://182.92.165.152:8080/api';
-    ENV.SelfShopID = 4;
+    ENV.SelfShopID = 7;
   }
 
   if (environment === 'test') {

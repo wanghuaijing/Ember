@@ -23,11 +23,15 @@ export default Ember.Controller.extend(pagingDataMixin, {
     },
     enum: Ember.inject.service(),
     addKey(list){
-        return list.map(function(item,index){
-            let temp = Ember.Object.create(item);
-            temp.set('key',index);
-            return temp
-        })
+        let array = [];
+        if(list){
+            array = list.map(function(item,index){
+                let temp = Ember.Object.create(item);
+                temp.set('key',index);
+                return temp
+            })
+        }
+        return array
     },
     saveCache(){
         let  data = this.get('goodsTemplate');
@@ -64,6 +68,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
                         that.set('goodsTemplate',Data);
                     })
                     .catch(function(error){
+                        console.log(error)
                         if (!error.abort) {
                             that.get('messager').alert(error.msg);
                         }
@@ -140,9 +145,10 @@ export default Ember.Controller.extend(pagingDataMixin, {
         specialDelete(index){
             let Temp = Ember.Object.extend()
             let goodsTemplate = this.get('goodsTemplate');
+            console.log(specialList)
             let specialList = goodsTemplate.SpecialAttribute;
             let newList = [];
-            specialList.map(function(item,i){
+            specialList&&specialList.map(function(item,i){
                 if(i!=index){
                     newList.pushObject(item)
                 }
@@ -197,6 +203,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
             let goodsTemplate = this.get('goodsTemplate');
             let purchaseList = goodsTemplate.PurchaseAttribute;
             let newList = [];
+            console.log(purchaseList)
             purchaseList.map(function(item,i){
                 if(i!=index){
                     newList.pushObject(item)

@@ -179,6 +179,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
         outTicketOrder: null,
         outTicketLoadingDetail: null,
         outTicketLoadingDetailRequest: null,
+        logisticsInfo:{},
         openOutTicketDialog(order){
             //防止错误操作
             if (this.get('orderOutTicketing')) {
@@ -221,6 +222,14 @@ export default Ember.Controller.extend(pagingDataMixin, {
                         }
                     })
                     .finally(()=>that.set('outTicketLoadingDetail', false));
+                //获取物流公司信息
+                that.get('http').request(`/Mall2/Order/Shipping/Company`)
+                    .then(function(res){
+                        that.set('companyList',res.Data);
+                    })
+                    .catch(function(error){
+                        console.log(error)
+                    })
             });
         },
         //出票
@@ -255,6 +264,18 @@ export default Ember.Controller.extend(pagingDataMixin, {
             },
             outTicket(){
                 this.outTicket();
+            },
+            changeCompany(value){
+                let companyList = this.get('companyList');
+                let name  = '';
+                companyList&&companyList.some(function(item){
+                    if(item.ID==value){
+                        name = item.name;
+                        return true
+                    }
+                });
+                this.set('logisticsInfo.CompanyID',value);
+                this.set('logisticsInfo.CompanyName',name);
             }
         }
     })

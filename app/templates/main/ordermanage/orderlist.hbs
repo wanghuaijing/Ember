@@ -89,6 +89,7 @@
     {{#if outTicketLoadingDetail}}
         {{#pre-loader color="theme" visible=true}}{{/pre-loader}}
     {{else}}
+        {{log outTicketOrderDetail}}
         <h4>订单信息</h4>
         {{order-listing  order=outTicketOrderDetail onlyShow=true}}
         <br>
@@ -112,6 +113,17 @@
                 </td>
             </tr>
         </table>
+        {{#if companyList}}
+            {{log companyList}}
+            {{#if (eq outTicketOrderDetail.Vendors.Goods.[0].IsEntity 'true')}}
+                <select class="form-control" {{action changeCompany 'target.value' }}>
+                    {{#each  companyList as |item|}}
+                        <option value={{itme.Id}}>{{item.name}}</option>
+                    {{/each}}
+                </select>
+                {{input value=logisticsInfo.No class="form-control"}}
+            {{/if}}
+        {{/if}}
     {{/if}}
     <p></p>
     <button class="button button-danger" {{action "outTicket"}}>

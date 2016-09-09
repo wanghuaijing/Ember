@@ -113,18 +113,74 @@
 {{/modal-dialog}}
 
 
-{{#modal-dialog title="订单退款" width="500px" show=showRefundDialog fade=true}}
+{{#modal-dialog title="订单退款" width="800px" show=showRefundDialog fade=true}}
     <!--<form method="post" action={{actionLink}}>-->
-    {{#if refundOrder}}
-        <h4>您将为订单<span class="text-danger">{{refundOrder.OrderNum}}</span>退款，请谨慎操作!</h4>
+    {{#if Refund}}
+        {{#pre-loader color="theme" visible=true}}{{/pre-loader}}
+    {{else}}
+        <h4>订单信息</h4>
+        {{order-listing  order=currentRefundOrder onlyShow=true}}
+        {{#each refundOrder as |item|}}
+            {{log item}}
+            <br>
+            <table class="table table-noborder">
+                <tr>
+                    <td>
+                        订单号:
+                    </td>
+                    <td>
+                        {{item.ID}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        退款状态
+                    </td>
+                    <td>
+                        {{item.OrderStatusName}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        申请时间
+                    </td>
+                    <td>
+                        {{item.ApplyTime}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>申请人</td>
+                    <td>{{item.ApplyUserName}}</td>
+                </tr>
+                <tr>
+                    <td>货物状态</td>
+                    <td>{{item.GoodsQua}}</td>
+                </tr>
+                <tr>
+                    <td>退款原因</td>
+                    <td>{{item.RefundReason}}</td>
+                </tr>
+                <tr>
+                    <td>退款说明</td>
+                    <td>{{item.RefundRemark}}</td>
+                </tr>
+                <tr>
+                    <td>图片证明</td>
+                    <td>
+                        {{#each (eq item.Images) as |i|}}
+                            {{img-loader classNames="thumb thumb-x3 thumb-block" tagName="div" original=(file-path i) }}
+                        {{/each}}
+                    </td>
+                </tr>
+            </table>
+            {{input type="hidden" value=item.ID name="Order_no"}}
+        {{/each}}
+        <h4>您将为订单<span class="text-danger"></span>退款，请谨慎操作!</h4>
         {{input type="radio" name="refundradio" value=isRefundOK}}
         通过
         {{input type="radio" name="refundradio" value=isRefundOK}}
         不通过
-        <p>退款说明（通过时必填）：</p>
-        {{textarea value=refundReason class="form-control form-control-block" rows=4 name="Description"}}
         <p></p>
-        {{input type="hidden" value=refundOrder.ID name="Order_no"}}
     {{/if}}
     <button class="button button-danger" {{action "refundOrder"}}>
         {{#if isOrderRefunding}}

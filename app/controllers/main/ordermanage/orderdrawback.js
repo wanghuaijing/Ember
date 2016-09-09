@@ -36,9 +36,9 @@ export default Ember.Controller.extend(pagingDataMixin, {
                     .then(function (values) {
                         values[0].Data && values[0].Data.forEach(function (item) {
                             that.get('orderTypes').some(function (type) {
-                                console.log(item.OrderStatus)
-                                if (item.OrderStatus === type.value) {
+                                if (item.Vendors.Goods[0].RefundContent[0].RefundStatus === type.value) {
                                     item.OrderStatusName = type.desc;
+                                    item.isBack = true;
                                     return true;
                                 }
                                 return false;
@@ -271,15 +271,18 @@ export default Ember.Controller.extend(pagingDataMixin, {
         actionLink: Ember.computed('isRefundOK', function () {
             return this.get('http.host') + `/Mall2/Order/Refund/Check?op=${this.get('isRefundOK')}`;
         }),
-        loadRefundOrderDetail(id){
-            if (this.get('outRefundLoadingDetailRequest')) {
-                this.get('outRefundLoadingDetailRequest').request.abort();
+        loadRefundOrderDetail(order,self){
+            let id = order.ID;
+            let purchaseID = order.Vendors.Goods[0].Purchase.PurchaseID;
+            self.set('currentRefundOrder',order);
+            if (self.get('outRefundLoadingDetail')) {
+                self.get('outRefundLoadingDetailRequest').request.abort();
             }
-            let that = this;
+            let that = self ;
             Ember.run.later(function () {
                 that.set('Refund', true);
                 let promise = that.get('http')
-                    .request(`/Mall2/Order/Refund?orderID=${id}`);
+                    .request(`/Mall2/Order/Refund?orderID=${id}&purchaseID=${purchaseID}`);
 
                 that.set('outRefundLoadingDetailRequest', promise);
 
@@ -293,6 +296,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
                             }
                         }
                         that.set('refundOrder', orderData);
+                        that.set('Refund', false);
                     })
                     .catch(function (error) {
                         if (!error.abort) {
@@ -304,7 +308,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
         },
         openRefundDialog(order){
             this.set('showRefundDialog', true);
-            this.get('loadRefundOrderDetail')(order.ID)
+            this.get('loadRefundOrderDetail')(order,this)
         },
         actions: {
             toggleRefundDialog(val){

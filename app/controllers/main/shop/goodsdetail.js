@@ -53,6 +53,9 @@ export default Ember.Controller.extend({
         else {
           that.set('goodsData', $.extend({},cache, {
             Shop: {ID: config.SelfShopID},
+            CustoService:{
+              CustomerServicePhone:''
+            }
           }));
           that.set('picsArr', cache.Pics ? cache.Pics.split('|') : []);
         }
@@ -72,7 +75,7 @@ export default Ember.Controller.extend({
                     .then(function(res){
                       let goodsData = res[1].Data;
                       let addTemplateData = res[0].Data;
-                      addTemplateData.PurchaseAttribute.map(function(item){
+                      addTemplateData.PurchaseAttribute&&addTemplateData.PurchaseAttribute.map(function(item){
                         if(goodsData.PurchAttriDetail){
                           item.checked = goodsData.PurchAttriDetail.some(function(i,index,array){
                             if(i.AttributeName==item.AttributeName){
@@ -83,7 +86,7 @@ export default Ember.Controller.extend({
                         }
                         return item
                       });
-                      addTemplateData.SpecialAttribute.map(function(item){
+                      addTemplateData.SpecialAttribute&&addTemplateData.SpecialAttribute.map(function(item){
                         if(goodsData.SpeciAttriDetail){
                           item.checked = goodsData.SpeciAttriDetail.some(function(i,index,array){
                             if(i.AttributeName==item.AttributeName){
@@ -99,7 +102,8 @@ export default Ember.Controller.extend({
                       that.set('goodsData',goodsData);
                       that.set('stocks',goodsData.StockPriceConfig);
                       that.set('tableData',goodsData.StockPriceConfig);
-                      that.set('isLoading',false)
+                      that.set('isLoading',false);
+                      that.set('picsArr', goodsData.Pics ? goodsData.Pics.split('|') : []);
                       /*                    let resData = res.Data
                        resData.SpecialAttribute =res.Data.SpecialAttribute.map(function(item,index){
                        item.checked = false;
@@ -198,7 +202,8 @@ export default Ember.Controller.extend({
       }
       if (!data.Name || !data.Name.trim()
         || !data.No || !data.No.trim()
-        || !data.Pics || !data.Pics.trim()) {
+        || !data.Pics || !data.Pics.trim()
+          || !data.CustoService.CustomerServicePhone|| !data.CustoService.CustomerServicePhone.trim()) {
         this.get('messager').alert('商品信息不能为空');
         return false;
       }
@@ -227,6 +232,8 @@ export default Ember.Controller.extend({
         this.set('editor', editor);
       },
       submit(){
+        let SpeciAttriDetail = [];
+        let PurchAttriDetail = [];
         if (this.get('isSubmiting')) {
           return;
         }
@@ -241,40 +248,45 @@ export default Ember.Controller.extend({
           StockPriceConfig = this.get('StockPriceConfig')
         }
         let CategoryID = this.get('currentID');
-        let SpeciAttriDetail = this.get('specialAttributesChecked').map(function(item){
-          let obj ={}
-          if(item){
-            obj = {
-              AttributeName:item.AttributeName,
-              AttributeValue:item.AttributeValue,
-              WebStyle:item.AttributeType.WebStyle
-            }
-          }
-          return obj;
-        });
-        let PurchAttriDetail = this.get('purchaseAttributesChecked').map(function(item){
-          let obj ={}
-          if(item){
-            let listValue = item.AttributeValue.map(function(i){
-              if(i.value){
-                return i.value
-              }else {
-                return i
+        if(this.get('specialAttributesChecked')){
+          SpeciAttriDetail = this.get('specialAttributesChecked').map(function(item){
+            let obj ={}
+            if(item){
+              obj = {
+                AttributeName:item.AttributeName,
+                AttributeValue:item.AttributeValue,
+                WebStyle:item.AttributeType.WebStyle
               }
-            })
-            obj = {
-              AttributeName:item.AttributeName,
-              AttributeValue:listValue,
-              WebStyle:item.AttributeType.WebStyle
             }
-          }
-          return obj;
-        });
+            return obj;
+          });
+        }
+        if(this.get('purchaseAttributesChecked')){
+          PurchAttriDetail = this.get('purchaseAttributesChecked').map(function(item){
+            let obj ={}
+            if(item){
+              let listValue = item.AttributeValue.map(function(i){
+                if(i.value){
+                  return i.value
+                }else {
+                  return i
+                }
+              })
+              obj = {
+                AttributeName:item.AttributeName,
+                AttributeValue:listValue,
+                WebStyle:item.AttributeType.WebStyle
+              }
+            }
+            return obj;
+          });
+        }
         this.set('goodsData.StockPriceConfig',StockPriceConfig);
         this.set('goodsData.CategoryID',CategoryID);
         this.set('goodsData.SpeciAttriDetail',SpeciAttriDetail);
         this.set('goodsData.PurchAttriDetail',PurchAttriDetail);
         let goodsData = this.get('goodsData');
+        console.log(goodsData)
         this.set('goodsData',goodsData)
         that.set('goodsData.Content', this.get('editor').html());
         that.set('goodsData.Brief', this.get('editor').text().replace(/<(img|embed)[^<]*\/>/g, '').trim());
@@ -448,11 +460,16 @@ export default Ember.Controller.extend({
             SellPrice:0.01,
             AttributesContent:{}
           };
-          item.map(function(i){
-            obj.AttributesContent[i.name] = i.value
-          });
+          if(item instanceof Array){
+            item.map(function(i){
+              obj.AttributesContent[i.name] = i.value
+            });
+          }else {
+            obj.AttributesContent[item.name] = item.value
+          }
           list.push(obj);
         });
+        console.log(list  )
         return list;
       },
       actions:{

@@ -10,13 +10,11 @@ export default Ember.Controller.extend(pagingDataMixin, {
       }
       let that = this;
       Ember.run.later(function () {
-        that.loadPageBegin(page);
-        let url = '/Mall2/Order/Admin';
+        let url = '/Mall2/Goods';
         let params = {
+          mode:1,
           q: that.get('keyword'),
-          type: that.get('orderType') || that.get('enum').orderType.ALL.value,
-          why: that.get('showCloseReasonSelect') ? that.get('closeReason') : null
-        }
+        };
         let promises = [that.get('http')
           .request(url, {
             data: Ember.$.extend({}, {
@@ -35,7 +33,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
         that.set('pageRequest', promises);
         Ember.RSVP.all(promises)
           .then(function (values) {
-            values[0].Data && values[0].Data.forEach(function (item) {
+            values&&values[0].Data && values[0].Data.forEach(function (item) {
               that.get('orderTypes').some(function (type) {
                 if (item.OrderStatus === type.value) {
                   item.OrderStatusName = type.desc;
@@ -44,11 +42,11 @@ export default Ember.Controller.extend(pagingDataMixin, {
                 return false;
               });
             });
-            that.set('test',values[0].Data[0]);
             that.set('showRefundDialog',true)
-            that.loadPageComplete(values[1].Count, values[0].Data);
+            values&&that.loadPageComplete(values[1].Count, values[0].Data);
           })
           .catch(function (error) {
+            console.log(error)
             if (!error.abort) {
               that.get('messager').alert(error.msg);
             }

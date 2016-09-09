@@ -235,12 +235,11 @@ export default Ember.Controller.extend(pagingDataMixin,{
         },
         typeChange(value){
             if(value==0){
-                this.set('template.IsEntity',true)
-            }else {
                 this.set('template.IsEntity',false)
+            }else {
+                this.set('template.IsEntity',true)
             }
         },
-
         add(id){
             this.set('template',Ember.Object.create());
             console.log(this.get('templates'))

@@ -64,9 +64,9 @@
                             </td>
 
                             <td class="text-center">
-                                {{#if data.IsNew}}
+                                {{#if (toboolean data.IsNew)}}
                                     {{#if  (toboolean isExistGoods)}}
-                                        {{if data.IsNecessary '是' '否'}}
+                                        {{if (toboolean data.IsNecessary) '是' '否'}}
                                     {{else}}
                                         <select class="form-control special"
                                                 onchange={{action 'SIsNecessaryChange' data.key}}>
@@ -75,7 +75,7 @@
                                         </select>
                                     {{/if}}
                                 {{else}}
-                                    {{if data.IsNecessary '是' '否'}}
+                                    {{if (toboolean data.IsNecessary) '是' '否'}}
                                 {{/if}}
                             </td>
                             <td class="text-center">
@@ -83,8 +83,8 @@
                                 class="form-control special" }}
                             </td>
                             <td class="text-center">
-                                {{#if isExistGoods}}
-                                    {{#if data.IsNew}}
+                                {{#if (toboolean isExistGoods)}}
+                                    {{#if (toboolean data.IsNew)}}
                                         <button class="button button-danger"
                                                 onclick={{action 'specialDelete'  data.key}}>删除</button>
                                     {{else}}
@@ -141,9 +141,9 @@
                                 </select>
                             </td>
                             <td class="text-center">
-                                {{#if data.IsNew}}
-                                    {{#if isExistGoods}}
-                                        {{if data.IsNecessary '是' '否'}}
+                                {{#if (toboolean data.IsNew)}}
+                                    {{#if (toboolean isExistGoods)}}
+                                        {{if (toboolean data.IsNecessary )'是' '否'}}
                                     {{else}}
                                         <select class="form-control special"
                                                 onchange={{action 'PIsNecessaryChange' data.key}}>
@@ -152,7 +152,7 @@
                                         </select>
                                     {{/if}}
                                 {{else}}
-                                    {{if data.IsNecessary '是' '否'}}
+                                    {{if (toboolean data.IsNecessary) '是' '否'}}
                                 {{/if}}
                             </td>
                             <td class="text-center">
@@ -160,8 +160,8 @@
                                 class="form-control special" }}
                             </td>
                             <td class="text-center">
-                                {{#if isExistGoods}}
-                                    {{#if data.IsNew}}
+                                {{#if (toboolean isExistGoods)}}
+                                    {{#if (toboolean data.IsNew)}}
                                         <button class="button button-danger"
                                                 onclick={{action 'purchaseDelete'  data.key}}>删除</button>
                                     {{else}}
