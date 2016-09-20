@@ -121,7 +121,6 @@
         <h4>订单信息</h4>
         {{order-listing  order=currentRefundOrder onlyShow=true}}
         {{#each refundOrder as |item|}}
-            {{log item}}
             <br>
             <table class="table table-noborder">
                 <tr>
@@ -154,7 +153,12 @@
                 </tr>
                 <tr>
                     <td>货物状态</td>
-                    <td>{{item.GoodsQua}}</td>
+                    <td>
+                        {{#if  item.IsReturnGoods }}
+                            有
+                        {{else}}
+                            没有
+                        {{/if}}</td>
                 </tr>
                 <tr>
                     <td>退款原因</td>
@@ -176,13 +180,15 @@
             {{input type="hidden" value=item.ID name="Order_no"}}
         {{/each}}
         <h4>您将为订单<span class="text-danger"></span>退款，请谨慎操作!</h4>
-        {{input type="radio" name="refundradio" value=isRefundOK}}
+        <input type="radio" name="refundradio"  checked={{eq isRefundOK 1}}
+                value={{eq isRefundOK 1}} onchange={{action "opChange" value="target.value"}}/>
         通过
-        {{input type="radio" name="refundradio" value=isRefundOK}}
+        <input type="radio" name="refundradio"  checked={{eq isRefundOK 0}}
+                value={{eq isRefundOK 0}} onchange={{action "opChange" value="target.value"}}/>
         不通过
         <p></p>
     {{/if}}
-    <button class="button button-danger" {{action "refundOrder"}}>
+    <button class="button button-danger" {{action "refundOrder" 0}}>
         {{#if isOrderRefunding}}
             <i class="fa fa-spin fa-spinner"></i>
             正在退款
@@ -190,12 +196,20 @@
             同意退款
         {{/if}}
     </button>
+    <button class="button button-danger" {{action "refundOrder" 1}}>
+        {{#if isOrderRefunding}}
+            <i class="fa fa-spin fa-spinner"></i>
+            正在退款
+        {{else}}
+            等待货物寄回
+        {{/if}}
+    </button>
     <button {{action "toggleRefundDialog" false}} class="button">返回</button>
     <!--</form>-->
 {{/modal-dialog}}
 
 {{#modal-dialog title="订单退款" width="500px" show=showGoPayDialog fade=false}}
-    <a href={{actionLink}}>点我前去付款</a>
+    <a href={{actionLink}} target="_blank">点我前去付款</a>
     <p></p>
     <button class="button button-primary" {{action "showGoPayDialog" false}}>
         我已完成付款

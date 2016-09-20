@@ -46,6 +46,9 @@
                       {{#if showRefresh}}
                           <button class="button button-block" {{action "operate" "refund"}}>更新退款</button>
                       {{/if}}
+                      {{#if showShipping}}
+                          <button class="button button-block" {{action "operate" "shipping"}}>查看物流</button>
+                      {{/if}}
                   </td>
               {{/unless}}
             </tr>

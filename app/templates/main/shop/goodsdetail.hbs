@@ -16,8 +16,13 @@
         <div class="form-group form-inline">
             <label class="form-label">商品模式</label>
             <select class="form-control" onchange={{action 'buyTypeChange' value='target.value'}}>
-                <option value=0>团购模式</option>
-                <option value=1>普通模式</option>
+                {{#if goodsData.IsTuan}}
+                    <option value=0 selected>团购模式</option>
+                    <option value=1>普通模式</option>
+                {{else}}
+                    <option value=0 >团购模式</option>
+                    <option value=1 selected>普通模式</option>
+                {{/if}}
             </select>
         </div>
     </div>
@@ -33,7 +38,7 @@
                     {{input class="form-control form-control-block" maxlength=20 type="text" value=goodsData.Name}}
                   </td>
                   <td>
-                      <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,5-20字</span>
+                      <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,5-18字</span>
                   </td>
               </tr>
               <tr>
@@ -66,7 +71,7 @@
                       {{input class="form-control form-control-block" type="text" value=goodsData.Label}}
                   </td>
                   <td>
-                      <span style="font-size: 14px;color:#999;margin-left: 20px">多标签时, 用|分开</span>
+                      <span style="font-size: 14px;color:#999;margin-left: 20px">多标签时, 用|分开,4-6字</span>
                   </td>
 
               </tr>
@@ -80,7 +85,7 @@
                   <td colspan="3">
                       <h5>
                           商品图片
-                          <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,1-5张</span>
+                          <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,1-5张，720*480</span>
                       </h5>
                     {{#each picsArr as |pic index|}}
                         <div style="display: inline-block;position: relative;">
@@ -99,7 +104,7 @@
                   <td colspan="3">
                       <h5>
                           列表大图
-                          <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,1张</span>
+                          <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,1张，720*380</span>
                       </h5>
                     {{#if goodsData.Photo}}
                       {{img-loader classNames="thumb thumb-x2" tagName="div" original=(file-path goodsData.Photo 4)
@@ -114,7 +119,7 @@
                   <td colspan="3">
                       <h5>
                           地址图片
-                          <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,1张</span>
+                          <span style="font-size: 14px;color:#999;margin-left: 20px;">*选填</span>
                       </h5>
                       <div style="width: 300px;">
                         {{#if goodsData.Banner}}
@@ -140,7 +145,7 @@
               </tr>
               {{#if goodsData.IsTuan}}
                   <tr>
-                      <td>开团人数</td>
+                      <td style="color:#ea1c0d">开团人数</td>
                       <td>{{input value=goodsData.TuanQua class="form-control form-control-block"}}</td>
                   </tr>
               {{/if}}

@@ -42,7 +42,6 @@ export default Ember.Controller.extend(pagingDataMixin, {
                 return false;
               });
             });
-            that.set('showRefundDialog',true)
             values&&that.loadPageComplete(values[1].Count, values[0].Data);
           })
           .catch(function (error) {
@@ -308,4 +307,34 @@ export default Ember.Controller.extend(pagingDataMixin, {
           .finally(()=>that.set('isOrderRefunding', false));
       }
     }
-  });
+  })
+    .reopen({
+      showTuanDetail:false,
+
+      actions:{
+        tuanDetail(id){
+          let that = this;
+          this.get('http')
+              .request(`/Mall2/Order/Admin?goodsId=${id}`)
+              .then(function(res){
+                that.set('tuanOrderList',res.Data);
+                that.set('showTuanDetail',true);
+              })
+              .catch(function(error){
+                aler(error.message)
+              });
+        },
+        tuanDetailClose(){
+          this.set('showTuanDetail',false);
+        },
+        startTuan(id){
+          this.get("http").request(`/Mall2/Goods/StartTuan?id=${id}`,{type:'post'})
+              .then(function(res){
+                alert('开团成功')
+              })
+              .catch(function(error){
+                alert(error.message);
+              })
+        }
+      }
+    });

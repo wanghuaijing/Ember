@@ -49,7 +49,8 @@
                                 class="form-control special"}}
                             </td>
                             <td class="text-center">
-                                <select class="form-control special" onchange={{action 'specialTypeChange' data.key}}>>
+                                <select class="form-control special" onchange={{action 'specialTypeChange' data.key}}>
+                                    <option>请选择</option>
                                     {{#each attributeType as |item|}}
                                         {{#if (eq item.AttributeTypeID data.AttributeTypeID)}}
                                             <option selected value={{item.AttributeTypeID}}>{{item.AttributeTypeName}}</option>
@@ -64,14 +65,20 @@
                             </td>
 
                             <td class="text-center">
-                                {{#if (toboolean data.IsNew)}}
+                                {{#if data.IsNew}}
                                     {{#if  (toboolean isExistGoods)}}
                                         {{if (toboolean data.IsNecessary) '是' '否'}}
                                     {{else}}
                                         <select class="form-control special"
                                                 onchange={{action 'SIsNecessaryChange' data.key}}>
-                                            <option value="true">是</option>
-                                            <option value="false">否</option>
+                                            <option >请选择</option>
+                                            {{#if IsNecessary}}
+                                                <option value="true" selected>是</option>
+                                                <option value="false">否</option>
+                                            {{else}}
+                                                <option value="true" >是</option>
+                                                <option value="false" selected>否</option>
+                                            {{/if}}
                                         </select>
                                     {{/if}}
                                 {{else}}
@@ -129,6 +136,7 @@
                             <td class="text-center">
                                 <select class="form-control special" onchange={{action 'purchaseTypeChange' data.key}}>
                                     {{#each attributeType as |item|}}
+                                        <option>请选择</option>
                                         {{#if (eq item.AttributeTypeID data.AttributeTypeID)}}
                                             <option selected value={{item.AttributeTypeID}}>{{item.AttributeTypeName}}</option>
                                         {{else}}
@@ -141,14 +149,21 @@
                                 </select>
                             </td>
                             <td class="text-center">
-                                {{#if (toboolean data.IsNew)}}
+                                {{log data}}
+                                {{#if data.IsNew}}
                                     {{#if (toboolean isExistGoods)}}
                                         {{if (toboolean data.IsNecessary )'是' '否'}}
                                     {{else}}
                                         <select class="form-control special"
                                                 onchange={{action 'PIsNecessaryChange' data.key}}>
-                                            <option value="true">是</option>
-                                            <option value="false">否</option>
+                                            <option >请选择</option>
+                                            {{#if IsNecessary}}
+                                                <option value="true" selected>是</option>
+                                                <option value="false">否</option>
+                                            {{else}}
+                                                <option value="true" >是</option>
+                                                <option value="false" selected>否</option>
+                                            {{/if}}
                                         </select>
                                     {{/if}}
                                 {{else}}

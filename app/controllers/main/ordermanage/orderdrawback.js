@@ -13,9 +13,9 @@ export default Ember.Controller.extend(pagingDataMixin, {
                 let url = '/Mall2/RefundOrder/Admin';
                 let params = {
                     q: that.get('keyword'),
-                    type: that.get('orderType') || that.get('enum').orderType.ALL.value,
+                    type: that.get('orderType') || that.get('enum').returnOrder.ALL.value,
                     why: that.get('showCloseReasonSelect') ? that.get('closeReason') : null
-                }
+                };
                 let promises = [that.get('http')
                     .request(url, {
                         data: Ember.$.extend({}, {
@@ -56,7 +56,6 @@ export default Ember.Controller.extend(pagingDataMixin, {
         },
         enum: Ember.inject.service(),
         http: Ember.inject.service(),
-        orderType: 0,
         goodsCategory:0,
         keyword: '',
         closeReason: '',
@@ -81,7 +80,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
             let orderTypeEnum = this.get('enum.returnOrder');
             for (var key in orderTypeEnum) {
                 types.push({
-                    value: orderTypeEnum[key].value * 1,
+                    value: orderTypeEnum[key].value&&orderTypeEnum[key].value * 1,
                     desc: orderTypeEnum[key].desc
                 });
             }
@@ -158,7 +157,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
 
                 that.set('isOrderDeleting', true);
                 that.get('http')
-                    .request(`/Mall2/Order/Cancel?id=${that.get('deletingOrder').ID}&why=${that.get('deleteReason')}`, {
+                    .request(`/Mall2/Order/Cancel/Admin?id=${that.get('deletingOrder').ID}&why=${that.get('deleteReason')}`, {
                         type: 'delete'
                     })
                     .then(function () {
@@ -314,23 +313,41 @@ export default Ember.Controller.extend(pagingDataMixin, {
             toggleRefundDialog(val){
                 this.set('showRefundDialog', val);
             },
-            refundOrder(){
+            opChange(value){
+                let isRefundOK = this.get('isRefundOK');
+                if(isRefundOK==1){
+                    this.set('isRefundOK',0)
+                }else {
+                    this.set('isRefundOK',1)
+                }
+            },
+            refundOrder(type){
+                let refunType = type==0;
                 let that = this;
                 that.set('isOrderRefunding', true);
                 that.get('http')
                     .request(`/Mall2/Order/Refund/Check?op=${that.get('isRefundOK')}`, {
                         type: 'post',
                         data: {
-                            Order_no: this.get('refundOrder').ID,
-                            Description: this.get('refundReason')
+                            ApplyRefundID: this.get('refundOrder')[0].ID,
+                            Description: this.get('refundOrder')[0].RefundReason,
+                            Amount:this.get('refundOrder')[0].RefundedMoney*100,
+                            IsRefundNow:refunType
                         }
                     })
                     .then(function (res) {
                         that.set('showRefundDialog', false);
-                        that.set('showGoPayDialog', true);
-                        //that.get('messager').alert('即将跳转到付款页面，付款完成后请刷新列表!');
-                        //window.open(res.Data.replace(/.*(?=http:\/\/)/gi), '');
-                        this.set('actionLink',res.Data.replace(/.*(?=http:\/\/)/gi), '');
+                        if(that.get('isRefundOK')==1){
+                            if(res.Data){
+                                that.set('showGoPayDialog', true);
+                                that.get('messager').alert('即将跳转到付款页面，付款完成后请刷新列表!');
+                                let externalHttp = res.Data.replace(/需要打开地址进行下一步退款操作:/g,'');
+                                window.open(externalHttp, '');
+                                that.set('actionLink',externalHttp);
+                            }else {
+                                that.set('actionLink','')
+                            }
+                        }
                     })
                     .catch(function (error) {
                         if (!error.abort) {

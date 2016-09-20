@@ -76,7 +76,7 @@ const ListData = Ember.Object.extend({
         let list = this.get('list');
         function getArray(list,index,depth){
             depth = depth + 20;
-            list[index].forEach((items,index)=>{
+            list[index]&&list[index].forEach((items,index)=>{
                 if(cb){
                     items=cb(items);
                 }
@@ -113,6 +113,8 @@ export default Ember.Controller.extend(pagingDataMixin,{
         }
         let that = this;
         let logicData = this.get('logicData');
+        page || (page = this.get('currentPage'));
+
         Ember.run.later(function () {
             that.loadPageBegin(page);
             let url = '/Mall2/GoodsCategory/List';
@@ -175,7 +177,6 @@ export default Ember.Controller.extend(pagingDataMixin,{
                             item.show = true;
                             return item
                         });
-                        that.set('count',values[1].Count);
                         that.loadPageComplete(values[1].Count, data);
                     }else {
                         logicData.add(0,values[0].Data);
@@ -184,7 +185,7 @@ export default Ember.Controller.extend(pagingDataMixin,{
                             item.isExpend = false;
                             return item
                         }));
-                        that.set('count',values[1].Count);
+                        that.set('countSelf',values[1].Count);
                         that.loadPageComplete(values[1].Count, data);
                     }
                 })
@@ -199,7 +200,6 @@ export default Ember.Controller.extend(pagingDataMixin,{
     },
     actions:{
         onchange(value){
-            console.log(value)
             this.set('currentId',value)
         },
         addNew(){
@@ -225,8 +225,8 @@ export default Ember.Controller.extend(pagingDataMixin,{
                 })
                 .then(function (res) {
                     that.set('newInfo','修改成功');
-                    cb();
-                    that.load()
+                    that.load();
+                    that.set('showWatchingNewDialog',false)
                 })
                 .catch(function(res){
                     that.set('newInfo',res.msg)
@@ -242,7 +242,6 @@ export default Ember.Controller.extend(pagingDataMixin,{
         },
         add(id){
             this.set('template',Ember.Object.create());
-            console.log(this.get('templates'))
             this.set('info','');
             this.set('clickedId',id);
             this.set('showWatchingAddDialog',true)
@@ -317,7 +316,6 @@ export default Ember.Controller.extend(pagingDataMixin,{
             let that = this;
             this.set('clickedId',id);
             this.set('parentID',pid);
-            console.log(pid)
             this.set('info','')
             this.set('isWatchingEditLoading',true)
             this.get('http')
@@ -356,7 +354,8 @@ export default Ember.Controller.extend(pagingDataMixin,{
                 .request(`/Mall2/GoodsCategory?cids=${id}`,
             {type:'delete'})
                 .then(function(res){
-                    cb()
+                    that.load();
+                    cb();
                 })
                 .catch(function(res){
                     that.set('info',res.msg)
@@ -394,7 +393,7 @@ export default Ember.Controller.extend(pagingDataMixin,{
                                     return item
                             }));
                         }
-                        let count = that.get('count');
+                        let count = that.get('countSelf');
                         dataList = logicData.getAll();
                         that.loadPageComplete(count,dataList);
                     })
@@ -426,7 +425,7 @@ export default Ember.Controller.extend(pagingDataMixin,{
                 }
 
                 setHide(id);
-                let count = that.get('count');
+                let count = that.get('countSelf');
                 dataList = logicData.getAll();
                 that.loadPageComplete(count,dataList);
             }

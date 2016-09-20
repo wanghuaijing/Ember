@@ -34,11 +34,19 @@
         {{#if orderData.OrderTime.Shipping}}
             <div class="item active">
                 <div class="time">{{orderData.OrderTime.Shipping}}</div>
-                <div class="desc">出票</div>
+                {{#if orderData.Vendors.Goods.[0].IsEntity}}
+                    <div class="desc">出货</div>
+                {{else}}
+                    <div class="desc">出票</div>
+                {{/if}}
             </div>
         {{else}}
             <div class="item">
-                <div class="desc">出票</div>
+                {{#if orderData.Vendors.Goods.[0].IsEntity}}
+                    <div class="desc">出货</div>
+                {{else}}
+                    <div class="desc">出票</div>
+                {{/if}}
             </div>
         {{/if}}
         {{#if orderData.OrderTime.Finish}}
@@ -59,7 +67,7 @@
                 <table>
                     <tr>
                         <td class="goods-img">
-                          {{img-loader tagName="div" original=(file-path goods.BigPhoto 4)}}
+                          {{img-loader tagName="div" original=(file-path goods.Photo 4)}}
                         </td>
                         <td class="goods-desc">
                             <p class="name">{{goods.Name}}</p>

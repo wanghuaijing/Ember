@@ -33,6 +33,22 @@ export default Ember.Component.extend({
       }
     }
   }),
+  showShipping:Ember.computed('order',function(){
+    if(!this.get('order'))return;
+    let status = this.get('order').OrderStatus;
+    let orderTypes = this.get('enum').orderType;
+    let isBack = this.get('order').isBack;
+    let goods = this.get('order').Vendors.Goods
+    if(isBack){
+      return false
+    }else {
+      if(orderTypes.HAS_SEND&&orderTypes.COMPLETE){
+        return status ===orderTypes.COMPLETE.value||status === orderTypes.HAS_SEND.value;
+      }else {
+        return false
+      }
+    }
+  }),
   showRefund: Ember.computed('order', function () {
     if(!this.get('order'))return;
     let isBack = this.get('order').isBack;
@@ -54,10 +70,10 @@ export default Ember.Component.extend({
     if(isBack){
       let status = this.get('order').Vendors.Goods[0].RefundContent[0].RefundStatus;
       let orderTypes = this.get('enum').returnOrder;
-      if(status === orderTypes.REFUNDS_UNCHECK.value){
-        return false
-      }else {
+      if(status === orderTypes.RETURN_GOODS.value){
         return true
+      }else {
+        return false
       }
     }else {
       return false

@@ -5,7 +5,6 @@ export default Ember.Controller.extend(pagingDataMixin, {
     http: Ember.inject.service(),
     load(page){
         page || (page = this.get('currentPage'));
-        let count = this.get('count');
         if (this.get('pageRequest')) {
             this.get('pageRequest')[0].request.abort();
             this.get('pageRequest')[1].request.abort();
@@ -22,8 +21,8 @@ export default Ember.Controller.extend(pagingDataMixin, {
             let promises = [that.get('http')
                 .request(url, {
                     data: Ember.$.extend({}, {
-                        skip: (page - 1) * count,
-                        count: count
+                        skip: (page - 1) * that.get('count'),
+                        count: that.get('count')
                     }, params)
                 }),
                 that.get('http')

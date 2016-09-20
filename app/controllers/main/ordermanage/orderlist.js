@@ -35,9 +35,17 @@ export default Ember.Controller.extend(pagingDataMixin, {
                 Ember.RSVP.all(promises)
                     .then(function (values) {
                         values[0].Data && values[0].Data.forEach(function (item) {
+                            let isBack = true;
+                            item.Vendors.Goods&&item.Vendors.Goods.map(function(goods){
+                                if(goods.RefundContent){
+                                }else {
+                                    isBack = false;
+                                }
+                            });
                             that.get('orderTypes').some(function (type) {
                                 if (item.OrderStatus === type.value) {
                                     item.OrderStatusName = type.desc;
+                                    item.isBack = isBack;
                                     return true;
                                 }
                                 return false;
@@ -46,6 +54,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
                         that.loadPageComplete(values[1].Count, values[0].Data);
                     })
                     .catch(function (error) {
+                        console.log(error)
                         if (!error.abort) {
                             that.get('messager').alert(error.msg);
                         }
@@ -94,6 +103,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
         }),
         actions: {
             orderTypeChange: function (type) {
+                console.log(type)
                 this.set('orderType', type * 1);
             },
             closeReasonChange: function (type) {
@@ -124,6 +134,9 @@ export default Ember.Controller.extend(pagingDataMixin, {
                         break;
                     case 'refund':
                         that.openRefundDialog(order);
+                        break;
+                    case "shipping":
+                        that.openShippingDialog(order);
                         break;
                 }
             }
@@ -157,7 +170,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
 
                 that.set('isOrderDeleting', true);
                 that.get('http')
-                    .request(`/Mall2/Order/Cancel?id=${that.get('deletingOrder').ID}&why=${that.get('deleteReason')}`, {
+                    .request(`/Mall2/Order/Cancel/Admin?id=${that.get('deletingOrder').ID}&why=${that.get('deleteReason')}`, {
                         type: 'delete'
                     })
                     .then(function () {
@@ -214,6 +227,16 @@ export default Ember.Controller.extend(pagingDataMixin, {
                                 break;
                             }
                         }
+                        let isRefund = true;
+                        orderData.Vendors.Goods&&orderData.Vendors.Goods.forEach(function(item){
+                            if(item.RefundContent){
+                                item.isRefund = true
+                            }else {
+                                item.isRefund = true
+                                isRefund = false;
+                            }
+                        });
+                        orderData.isRefund = isRefund;
                         that.set('outTicketOrderDetail', orderData);
                     })
                     .catch(function (error) {
@@ -236,16 +259,20 @@ export default Ember.Controller.extend(pagingDataMixin, {
         outTicket(){
             let that = this;
             that.set('orderOutTicketing', true);
+            let logisticsInfo = this.get('logisticsInfo');
+            let outTicketOrderDetail = this.get('outTicketOrderDetail');
             that.get('http')
                 .request(`/Mall2/Order/Shipping?id=${that.get('outTicketOrder').ID}`, {
                     type: 'post',
-                    data: {
-                        delivery: null
-                    }
+                    data:logisticsInfo
                 })
                 .then(function () {
                     that.set('showOutTicketDialog', false);
-                    that.get('messager').alert('出票成功!');
+                    if(outTicketOrderDetail.Vendors.Goods[0].IsEntity){
+                        that.get('messager').alert('发货成功')
+                    }else {
+                        that.get('messager').alert('出票成功!');
+                    }
                     that.load();
                 })
                 .catch(function (error) {
@@ -261,6 +288,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
         actions: {
             toggleOutTicketDialog(val){
                 this.set('showOutTicketDialog', val);
+                this.set('logisticsInfo',{})
             },
             outTicket(){
                 this.outTicket();
@@ -270,7 +298,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
                 let name  = '';
                 companyList&&companyList.some(function(item){
                     if(item.ID==value){
-                        name = item.name;
+                        name = item.Name;
                         return true
                     }
                 });
@@ -327,5 +355,43 @@ export default Ember.Controller.extend(pagingDataMixin, {
                     .finally(()=>that.set('isOrderRefunding', false));
             }
         }
-    });
+    })
+    .reopen({
+        //查看物流
+        showShippingDialog:false,
+        outShippingLoading:false,
+        shippingType:Ember.computed('enum.shippingType',function(){
+           return this.get('enum').shippingType
+        }),
+        openShippingDialog(order){
+            this.set('showShippingDialog',true);
+            this.set('outShippingLoading',true);
+            let that = this;
+            let shippingNum = order.ShippingNum;
+            let shippingType = this.get('shippingType');
+            console.log(shippingType)
+            this.get('http').request(`/Mall2/Order/Shipping?deliveryNo=${shippingNum}`)
+                .then(function(res){
+                    res.Data.OrderNo = order.OrderNo;
+                    for(var item in shippingType){
+                        if(shippingType[item].value==res.Data.state){
+                            res.Data.stateName=shippingType[item].desc;
+                        }
+                    }
+                    that.set('shippingDetail',res.Data);
+                    that.set('outShippingLoading',false)
+                }).catch(function(error){
+                console.log(error);
+                if (!error.abort) {
+                    that.get('messager').alert(error.msg);
+                }
+            })
+        },
+        actions:{
+            toggleShippingDialog(val){
+                this.set('showShippingDialog',val)
+            }
+
+        }
+    })
 

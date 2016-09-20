@@ -27,10 +27,6 @@ export  default Ember.Service.extend({
     CLOSED: {
       desc: '已关闭',
       value: 5
-    },
-    TUAN_WAIT:{
-      desc:'团购',
-      value:10
     }
   },
   returnOrder:{
@@ -38,8 +34,8 @@ export  default Ember.Service.extend({
       desc: '全部',
       value:null
     },
-    AUDIT_ING:{
-      desc:'审核中',
+    AUDIT_FAIL:{
+      desc:'审核不通过',
       value:0
     },
     REFUNDS_UNCHECK: {
@@ -89,5 +85,37 @@ export  default Ember.Service.extend({
       desc:'商品',
       value:'商品'
     }
-  ]
+  ],
+  shippingType:{
+    EXPRESS_SHIPPING:{
+      desc:'运送中',
+      value:0
+    },
+    EXPRESS_GET:{
+      desc:'揽件',
+      value:1
+    },
+    EXPRESS_ERROR:{
+      desc:"疑难",
+      value:2
+    },
+    EXPRESS_SIGN_IN:{
+      desc:"签收",
+      value:3
+    },
+    EXPRESS_BACK_SIGN:{
+      desc:'退签',
+      value:4
+    },
+    EXPRESS_START:{
+      desc:"派送",
+      value:5
+    },
+    EXPRESS_BACKING:{
+      desc:"退回",
+      value:6
+    }
+
+
+  }
 });

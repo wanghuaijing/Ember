@@ -145,7 +145,6 @@ export default Ember.Controller.extend(pagingDataMixin, {
         specialDelete(index){
             let Temp = Ember.Object.extend()
             let goodsTemplate = this.get('goodsTemplate');
-            console.log(specialList)
             let specialList = goodsTemplate.SpecialAttribute;
             let newList = [];
             specialList&&specialList.map(function(item,i){
@@ -203,7 +202,6 @@ export default Ember.Controller.extend(pagingDataMixin, {
             let goodsTemplate = this.get('goodsTemplate');
             let purchaseList = goodsTemplate.PurchaseAttribute;
             let newList = [];
-            console.log(purchaseList)
             purchaseList.map(function(item,i){
                 if(i!=index){
                     newList.pushObject(item)

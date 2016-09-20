@@ -58,7 +58,7 @@ export default Ember.Controller.extend(pagingDataMixin,{
         deleteClick(id){
             let that = this;
             that.get('http')
-                .request(`/Mall2/ADGoods?id=${id}`, {
+                .request(`/Mall2/Banner?ids=${id}`, {
                     type: 'delete'
                 })
                 .then(function () {

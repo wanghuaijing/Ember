@@ -18,18 +18,6 @@
                 {{/each}}
             </select>
         </div>
-        <div class="form-group form-inline">
-            <label class="form-label">商品类型:</label>
-            <select class="form-control" onchange={{action "goodsCategoryChange" value="target.value"}}>
-                {{#each goodsCategorys as |type|}}
-                    {{#if (eq orderType type.value)}}
-                        <option selected value={{type.value}}>{{type.name}}</option>
-                    {{else}}
-                        <option value={{type.value}}>{{type.name}}</option>
-                    {{/if}}
-                {{/each}}
-            </select>
-        </div>
         {{#if showCloseReasonSelect}}
             <div class="form-group form-inline">
                 <label class="form-label">关闭原因:</label>
@@ -46,7 +34,6 @@
         {{/if}}
         <button class="button button-theme" {{action "search"}}>查询</button>
     </div>
-
     {{#data-pagination-view isLoading=isLoading onPageChange=(action 'search') totalCount=totalCount
     data=pageDataList totalPage=totalPage currentPage=currentPage}}
         {{#if pageDataList}}
@@ -84,59 +71,86 @@
     <button {{action "toggleDeleteDialog" false}} class="button">返回</button>
 {{/modal-dialog}}
 
-
-{{#modal-dialog title="完成出票" width="800px;" show=showOutTicketDialog fade=true}}
-    {{#if outTicketLoadingDetail}}
-        {{#pre-loader color="theme" visible=true}}{{/pre-loader}}
-    {{else}}
-        {{log outTicketOrderDetail}}
-        <h4>订单信息</h4>
-        {{order-listing  order=outTicketOrderDetail onlyShow=true}}
-        <br>
-        <h4>订票人信息</h4>
-        <table class="table table-noborder">
-            <tr>
-                <td>
-                    订票人:
-                </td>
-                <td>
-                    {{outTicketOrderDetail.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Name}}
-
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    订票人电话:
-                </td>
-                <td>
-                    {{outTicketOrderDetail.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Phone}}
-                </td>
-            </tr>
-        </table>
-        {{#if companyList}}
-            {{log companyList}}
-            {{#if (eq outTicketOrderDetail.Vendors.Goods.[0].IsEntity 'true')}}
-                <select class="form-control" {{action changeCompany 'target.value' }}>
-                    {{#each  companyList as |item|}}
-                        <option value={{itme.Id}}>{{item.name}}</option>
-                    {{/each}}
-                </select>
-                {{input value=logisticsInfo.No class="form-control"}}
+{{#if outTicketOrderDetail.Vendors.Goods.[0].IsEntity}}
+    {{#modal-dialog title="完成发货" width="800px;" show=showOutTicketDialog fade=true}}
+        {{#if outTicketLoadingDetail}}
+            {{#pre-loader color="theme" visible=true}}{{/pre-loader}}
+        {{else}}
+            <h4>订单信息</h4>
+            {{order-listing  order=outTicketOrderDetail onlyShow=true}}
+            <br>
+            {{#if companyList}}
+                    <select class="form-control"
+                            onchange={{action "changeCompany"  value="target.value" }}>
+                        {{#each  companyList as |item|}}
+                            <option value={{item.ID}}>{{item.Name}}</option>
+                        {{/each}}
+                    </select>
+                    {{input value=logisticsInfo.No class="form-control"}}
             {{/if}}
         {{/if}}
-    {{/if}}
-    <p></p>
-    <button class="button button-danger" {{action "outTicket"}}>
-        {{#if orderOutTicketing}}
-            <i class="fa fa-spin fa-spinner"></i>
-            正在出票
+        <p></p>
+        {{#if outTicketOrderDetail.isRefund}}
+            <button class="button button-dark">不可发货</button>
         {{else}}
-            确认出票
+            <button class="button button-danger" {{action "outTicket"}}>
+                {{#if orderOutTicketing}}
+                    <i class="fa fa-spin fa-spinner"></i>
+                    正在发货
+                {{else}}
+                    确认发货
+                {{/if}}
+            </button>
         {{/if}}
-    </button>
-    <button {{action "toggleOutTicketDialog" false}} class="button">返回</button>
-{{/modal-dialog}}
+        <button {{action "toggleOutTicketDialog" false}} class="button">返回</button>
+    {{/modal-dialog}}
 
+{{else}}
+    {{#modal-dialog title="完成出票" width="800px;" show=showOutTicketDialog fade=true}}
+        {{#if outTicketLoadingDetail}}
+            {{#pre-loader color="theme" visible=true}}{{/pre-loader}}
+        {{else}}
+            <h4>订单信息</h4>
+            {{order-listing  order=outTicketOrderDetail onlyShow=true}}
+            <br>
+            <h4>订票人信息</h4>
+            <table class="table table-noborder">
+                <tr>
+                    <td>
+                        订票人:
+                    </td>
+                    <td>
+                        {{outTicketOrderDetail.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Name}}
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        订票人电话:
+                    </td>
+                    <td>
+                        {{outTicketOrderDetail.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Phone}}
+                    </td>
+                </tr>
+            </table>
+        {{/if}}
+        <p></p>
+        {{#if outTicketOrderDetail.isRefund}}
+            <button class="button button-dark">不可出票</button>
+        {{else}}
+            <button class="button button-danger" {{action "outTicket"}}>
+                {{#if orderOutTicketing}}
+                    <i class="fa fa-spin fa-spinner"></i>
+                    正在出票
+                {{else}}
+                    确认出票
+                {{/if}}
+            </button>
+        {{/if}}
+        <button {{action "toggleOutTicketDialog" false}} class="button">返回</button>
+    {{/modal-dialog}}
+
+{{/if}}
 
 {{#modal-dialog title="订单退款" width="500px" show=showRefundDialog fade=true}}
     <!--<form method="post" action={{actionLink}}>-->
@@ -163,12 +177,55 @@
     <!--</form>-->
 {{/modal-dialog}}
 
-{{#modal-dialog title="订单退款" width="500px" show=showGoPayDialog fade=false}}
-    <a href={{actionLink}}>点我前去付款</a>
-    <p></p>
-    <button class="button button-primary" {{action "showGoPayDialog" false}}>
-        我已完成付款
-    </button>
+{{#modal-dialog title="物流信息" width="500px" show=showShippingDialog fade=false}}
+    {{#if outShippingLoading}}
+        {{#pre-loader color="theme" visible=true}}{{/pre-loader}}
+    {{else}}
+        {{#if shippingDetail}}
+            <table class="table table-noborder">
+                <tr>
+                    <td>
+                        订单号：
+                    </td>
+                    <td>
+                        {{shippingDetail.OrderNo}}
+                    </td>
+                    <td>运单号</td>
+                    <td>{{shippingDetail.nu}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        物流公司:
+                    </td>
+                    <td>
+                        {{shippingDetail.comname}}
+                    </td>
+                    <td>
+                        物流状态
+                    </td>
+                    <td>
+                        {{shippingDetail.stateName}}
+                    </td>
+                </tr>
+            </table>
+            <table class="table table-noborder">
+                <tr>
+                    <td>物流跟踪</td>
+                    <td><ul class="order-time-stand">
+                        {{#if shippingDetail.data}}
+                            {{#each shippingDetail.data as |item|}}
+                                <li class="item active" >
+                                    <div class="item-wrapper">
+                                        <div>{{item.time}}</div>
+                                        <div>{{item.context}}</div>
+                                    </div></li>
+                            {{/each}}
+                        {{/if}}
+                    </ul></td>
+                </tr>
+            </table>
+        {{/if}}
+    {{/if}}
 {{/modal-dialog}}
 
 {{outlet}}

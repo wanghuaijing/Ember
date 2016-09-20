@@ -377,9 +377,11 @@ export default Ember.Controller.extend({
         },
         buyTypeChange(value){
           if(value==0){
-            this.set('goodsData.IsTuan',true)
+            this.set('goodsData.IsTuan',true);
+            this.set('goodsData.TuanQua',null);
           }else {
-            this.set('goodsData.IsTuan',false)
+            this.set('goodsData.IsTuan',false);
+            this.set('goodsData.TuanQua',null);
           }
         }
       }

@@ -25,6 +25,9 @@
                 <th class="text-left">
                     名称
                 </th>
+                <th class="text-center">
+                    编号
+                </th>
                 <th>商品有效期</th>
                 <th>原价</th>
                 <th>卖价</th>
@@ -34,13 +37,16 @@
             {{#each pageDataList as |data|}}
                 <tr>
                     <td style="width: 110px;">
-                        {{img-loader classNames="thumb thumb-x2" original=(file-path data.BigPhoto 4)}}
+                        {{img-loader classNames="thumb thumb-x2" original=(file-path data.Photo 1)}}
                     </td>
                     <td>
                       {{data.ID}}
                     </td>
                     <td>
                         {{data.Name}}
+                    </td>
+                    <td>
+                        {{data.No}}
                     </td>
                     <td class="text-center">{{data.BeginTime}} - {{data.EndTime}}</td>
                     <td class="text-center">{{data.MinPrimePrice}} - {{data.MaxPrimePrice}}</td>

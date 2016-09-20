@@ -40,7 +40,9 @@ export default Ember.Component.extend({
         }else {
             id.removeAt(index,length-index)
             that.set('currentId',id);
-            listData.removeAt(num,length-num);
+            if(length>num){
+                listData.removeAt(num,length-num);
+            }
         }
     },
     init(){
@@ -68,6 +70,7 @@ export default Ember.Component.extend({
     actions:{
         listChange(index){
             let value =arguments[1].target.value;
+            console.log(index)
             this.load(value,index*1)
         }
 /*        twoChange(value){
