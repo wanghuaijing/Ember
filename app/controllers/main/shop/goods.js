@@ -16,7 +16,8 @@ export default Ember.Controller.extend(pagingDataMixin, {
             let url = '/Mall2/Goods';
             let params = {
                 q: that.get('keyword'),
-                dataType: 3
+                beginTime:that.get('validDate')[0],
+                endTime:that.get('validDate')[1]
             };
             let promises = [that.get('http')
                 .request(url, {
@@ -36,6 +37,10 @@ export default Ember.Controller.extend(pagingDataMixin, {
             that.set('pageRequest', promises);
             Ember.RSVP.all(promises)
                 .then(function (values) {
+                    values[0].Data&&values[0].Data.map(function(item){
+                        item.isEdit = false;
+                        return item
+                    });
                     that.loadPageComplete(values[1].Count, values[0].Data);
                 })
                 .catch(function (error) {
@@ -51,6 +56,8 @@ export default Ember.Controller.extend(pagingDataMixin, {
     deletingGoods: null,
     showDeleteGoodsDialog: false,
     isGoodsDeleting: false,
+    isEdit:false,
+    validDate:[],
     openDeleteGoodsDialog(item){
         this.set('deletingGoods', item);
         this.set('showDeleteGoodsDialog', true);
@@ -83,6 +90,44 @@ export default Ember.Controller.extend(pagingDataMixin, {
                     }
                 })
                 .finally(()=>that.set('isGoodsDeleting', false));
+        },
+        hotOrderChange(data,key,e){
+            let id = data.ID,
+                value = e.target.value;
+            let that = this;
+            if(value){
+                if(value>0&&value<256){
+                    this.get('http')
+                        .request(`/Mall2/Goods/SetHot?id=${id}&hot=${value}`,
+                            {type:'put'})
+                        .then(()=>{
+                            this.set('isEdit',false)
+                        })
+                        .catch(()=>{
+                            if (!error.abort) {
+                                that.get('messager').alert(error.msg);
+                            }
+                        })
+                }else {
+                    that.get('messager').alert('修改失败，请输入0-255,的数字');
+                    this.set('isEdit',false)
+                }
+            }else {
+                this.get('http')
+                    .request(`/Mall2/Goods/SetHot?id=${id}&hot=${value}`,
+                        {type:'put'})
+                    .then(()=>{
+                        this.set('isEdit',false)
+                    })
+                    .catch(()=>{
+                        if (!error.abort) {
+                            that.get('messager').alert(error.msg);
+                        }
+                    })
+            }
+        },
+        isEditChange(){
+            this.set('isEdit',true)
         }
     }
 });

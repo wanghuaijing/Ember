@@ -220,11 +220,10 @@ export default Ember.Controller.extend(pagingDataMixin, {
             let categoryID = this.get('categoryID');
             let categoryName = this.get('categoryName');
             let goodsTemplate = this.get('goodsTemplate');
-            let specialListKey = this.get('specialListKey')
+            let specialListKey = this.get('specialListKey');
             let specialList=specialListKey.map(function(item){
                 return item.getProperties(['AttributeName','AttributeTypeID',
                     'AttributeType','Constraint','IsNecessary']);
-
             });
             let purchaseListKey = this.get('purchaseListKey')
             let purchaseList= purchaseListKey.map(function(item){
@@ -249,8 +248,9 @@ export default Ember.Controller.extend(pagingDataMixin, {
                 type:type,
                 url :'/Mall2/GoodsTemplate',
                 data:data
-            }).then(function(res){
-                that.get('messager').alert('发布成功');
+            })
+                .then(function(res){
+                    that.get('messager').alert('发布成功');
                 })
                 .catch(function(err){
                     console.log(err)

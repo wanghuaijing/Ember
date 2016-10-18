@@ -60,7 +60,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
         keyword: '',
         closeReason: '',
         closeReasons: Ember.computed('model', function () {
-            let model = this.get('model')
+            let model = this.get('model');
             let reasons = [];
             for (var key in model) {
                 reasons.push({
@@ -154,10 +154,11 @@ export default Ember.Controller.extend(pagingDataMixin, {
                 if (that.get('isOrderDeleting')) {
                     return;
                 }
-
+                let reasonValue = that.get('deleteReason');
+                let reasonText = this.get('closeReasons').findBy('value',reasonValue).text;
                 that.set('isOrderDeleting', true);
                 that.get('http')
-                    .request(`/Mall2/Order/Cancel/Admin?id=${that.get('deletingOrder').ID}&why=${that.get('deleteReason')}`, {
+                    .request(`/Mall2/Order/Cancel/Admin?id=${that.get('deletingOrder').ID}&code=${reasonValue}&why=${reasonText}`, {
                         type: 'delete'
                     })
                     .then(function () {
@@ -330,7 +331,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
                         type: 'post',
                         data: {
                             ApplyRefundID: this.get('refundOrder')[0].ID,
-                            Description: this.get('refundOrder')[0].RefundReason,
+                            Description: this.get('refundOrder')[0].RefundReason||'默认退款',
                             Amount:this.get('refundOrder')[0].RefundedMoney*100,
                             IsRefundNow:refunType
                         }

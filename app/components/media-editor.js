@@ -17,11 +17,13 @@ export default Ember.Component.extend({
         'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
         'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'table', 'hr', 'emoticons', 
         'baidumap', 'pagebreak', 'anchor', 'link', 'unlink'
-      ]
+      ],
+
     });
 
     this.get('onInit')(editor);
-    editor.html(this.get('initialData'));
+    editor.appendHtml(this.get('initialData'));
+    console.log(Ember.$('#'+textArea.id).get(0));
   },
   willDestroyElement(){
     KindEditor.remove('#' + this.get('id'));

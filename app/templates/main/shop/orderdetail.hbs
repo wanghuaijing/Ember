@@ -8,7 +8,7 @@
   {{#pre-loader color="theme" visible=isLoading}}{{/pre-loader}}
   {{#if orderData}}
       <div class="block">
-          订单号:{{orderData.OrderNum}}
+          订单号:{{orderData.OrderNo}}
         {{#if orderData.CloseReason}}
             <span class="pull-right text-danger">{{orderData.OrderStatusName}}
                 ({{orderData.CloseReason}})</span>
@@ -82,30 +82,40 @@
       <h4>订票人信息</h4>
       <div class="block">
           <table class="table table-noborder">
-              <tr>
-                  <td>
-                      订票人:
-                  </td>
-                  <td>
-                    {{orderData.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Name}}
-                  </td>
-              </tr>
-              <tr>
-                  <td>
-                      订票人电话:
-                  </td>
-                  <td>
-                    {{orderData.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Phone}}
-                  </td>
-              </tr>
-              <tr>
-                  <td>
-                      收货地址
-                  </td>
-                  <td>
-                      {{orderData.ShippingAddr.Where}}
-                  </td>
-              </tr>
+              {{#if orderData.Vendors.Goods.[0].IsEntity}}
+                  <tr>
+                      <td>收货人：</td>
+                      <td>{{orderData.ShippingAddr.Name}}</td>
+                  </tr>
+              {{else}}
+                  <tr>
+                      <td>订票人</td>
+                      <td>{{orderData.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Name}}</td>
+                  </tr>
+
+              {{/if}}
+              {{#if orderData.Vendors.Goods.[0].IsEntity}}
+                  <tr>
+                      <td>收货人电话:</td>
+                      <td>{{orderData.ShippingAddr.Phone}}</td>
+                  </tr>
+              {{else}}
+                  <tr>
+                      <td>订票人电话:</td>
+                      <td>{{orderData.Vendors.Goods.[0].ConsumerInfos.TicketOwners.[0].Phone}}</td>
+                  </tr>
+              {{/if}}
+              {{#if orderData.Vendors.Goods.[0].IsEntity}}
+                  <tr>
+                      <td>
+                          收货地址
+                      </td>
+                      <td>
+                          {{orderData.ShippingAddr.Where}}
+                      </td>
+                  </tr>
+              {{else}}
+              {{/if}}
           </table>
       </div>
       <br>
@@ -119,7 +129,7 @@
                   订单号:
               </td>
               <td>
-                {{orderData.OrderNum}}
+                {{orderData.OrderNo}}
               </td>
           </tr>
           <tr>

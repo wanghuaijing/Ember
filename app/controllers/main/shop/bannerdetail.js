@@ -31,20 +31,23 @@ export default Ember.Controller.extend({
             this.get('http').request(`/Mall2/Banner/Admin?id=${id}`)
                 .then(function(res){
                     let bannerInfo = res.Data[0];
-                    console.log(bannerInfo);
+                    let link = bannerInfo.Link;
                     that.set('bannerInfo',bannerInfo);
-                    if(bannerInfo.Type=="商品"){
-                        that.get('http')
-                            .request(`/Mall2/Goods/Detail?id=${bannerInfo.Link}`)
-                            .then(function(res){
-                                that.set('searchString',res.Data.Name)
-                            })
-                            .catch(function(error) {
-                                if (!error.abort) {
-                                    that.get('messager').alert(error.msg);
-                                }
-                            })
+                    if(link){
+                        if(bannerInfo.Type=="商品"){
+                            that.get('http')
+                                .request(`/Mall2/Goods/Detail?id=${bannerInfo.Link}`)
+                                .then(function(res){
+                                    that.set('searchString',res.Data.Name)
+                                })
+                                .catch(function(error) {
+                                    if (!error.abort) {
+                                        that.get('messager').alert(error.msg);
+                                    }
+                                })
+                        }
                     }
+
                     that.set('isLoading',false)
                 })
                 .catch(function(error) {

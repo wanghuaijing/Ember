@@ -116,23 +116,6 @@
                   </td>
               </tr>
               <tr>
-                  <td colspan="3">
-                      <h5>
-                          地址图片
-                          <span style="font-size: 14px;color:#999;margin-left: 20px;">*选填</span>
-                      </h5>
-                      <div style="width: 300px;">
-                        {{#if goodsData.Banner}}
-                          {{img-loader classNames="thumb thumb-x3 thumb-block" tagName="div" original=(file-path goodsData.Banner) onClick=(action "showFullImage" (file-path goodsData.Banner))}}
-                        {{/if}}
-                      </div>
-                      <p></p>
-                      <button style="vertical-align: bottom;"
-                              class="button button-theme" {{action 'toggleAddressPicUploadDialog' true}}>选择图片
-                      </button>
-                  </td>
-              </tr>
-              <tr>
                   <td>
                       限购数量:
                   </td>

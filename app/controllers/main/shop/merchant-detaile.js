@@ -3,7 +3,8 @@
  */
 import Ember from 'ember';
 import config from '../../../config/environment';
-export default Ember.Controller.extend({
+import formData from '../../../mixins/form-data'
+export default Ember.Controller.extend(formData,{
     http: Ember.inject.service(),
     queryParams: ['ID', 'type'],
     isAdd: Ember.computed('type', function () {
@@ -12,7 +13,18 @@ export default Ember.Controller.extend({
         }
         return false;
     }),
+    rules:[{name:'Name', type:'exist'}, {name:'Phone',type:'exist',rule:[10,11]}],
+    merchantCheckInit(rules,values){
+        rules.forEach((item)=>{
+            this.get('addObj')(values[item.name],item)
+        })
+    },
+    checkValue(rules,values){
+        let result = this.get('getListResult');
+        console.log(result)
+    },
     load(){
+        console.log(this)
         let id = this.get('ID');
         if(this.get('pageRequest')){
             this.get('pageRequest').request.abort()
@@ -25,11 +37,11 @@ export default Ember.Controller.extend({
             this.get('http').request(`/Mall2/Shop?id=${id}`)
                 .then(function(res){
                     let merchantInfo = res.Data;
-                    console.log(merchantInfo);
                     that.set('merchantInfo',merchantInfo);
-                    that.set('isLoading',false)
+                    that.set('isLoading',false);
                 })
                 .catch(function(error) {
+                    console.log(error)
                     if (!error.abort) {
                         that.get('messager').alert(error.msg);
                     }
@@ -44,7 +56,6 @@ export default Ember.Controller.extend({
             this.set('isShowImg',value)
         },
         merchantPicUploaded(value){
-            console.log(value)
             this.set('merchantInfo.Image',value)
         },
         goBack(){
@@ -75,6 +86,10 @@ export default Ember.Controller.extend({
             }).finally(()=>{
                 this.set('isSubmiting',false)
             });
+        },
+        initChecked(){
+            let rules = this.get('rules');
+
         },
         reset(){
             this.set('merchantInfo', {})

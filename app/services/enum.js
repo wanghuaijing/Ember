@@ -27,6 +27,10 @@ export  default Ember.Service.extend({
     CLOSED: {
       desc: '已关闭',
       value: 5
+    },
+    TUAN_NOT_TICKET:{
+      desc:'团购待确认',
+      value:10
     }
   },
   returnOrder:{
@@ -75,13 +79,6 @@ export  default Ember.Service.extend({
   ],
   bannerType:[
     {
-      desc:'全部'
-    },
-    {
-      desc:'广告',
-      value:'广告'
-    },
-    {
       desc:'商品',
       value:'商品'
     }
@@ -117,5 +114,27 @@ export  default Ember.Service.extend({
     }
 
 
-  }
+  },
+  bannerSeq:[
+    {
+      value:1,
+      desc:'顺序为1'
+    },
+   {
+      value:2,
+      desc:'顺序为2'
+    },
+    {
+      value:3,
+      desc:'顺序为3'
+    },
+   {
+      value:4,
+      desc:'顺序为4'
+    },
+    {
+      value:5,
+      desc:'顺序为5'
+    }
+  ]
 });

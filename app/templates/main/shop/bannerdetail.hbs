@@ -1,0 +1,100 @@
+<div class="site-path">
+    <a href="javascript:;" {{action 'goBack'}}>
+        <i class="fa fa-angle-left fa-2x"></i>
+        返回
+    </a>
+</div>
+<div class="entrance slide-in-down">
+    {{#pre-loader color="theme" visible=isLoading}}{{/pre-loader}}
+    <h4>商家信息</h4>
+    <div class="block">
+        <table class="table table-noborder">
+            <tr>
+                <td>banner名称</td>
+                <td>{{input value=bannerInfo.Name class="form-control form-control-block"}}</td>
+            </tr>
+            <tr>
+                <td>显示顺序</td>
+                <td>
+                    {{#if isAdd}}
+                        {{input value=bannerInfo.Seq class="form-control form-control-block"}}
+                    {{else}}
+                        {{bannerInfo.Seq}}
+                    {{/if}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    有效时间
+                </td>
+                <td>
+                    {{date-picker dateValue=bannerInfo.BeginTime}}
+                </td>
+                <td>至</td>
+                <td>{{date-picker dateValue=bannerInfo.EndTime}}</td>
+            </tr>
+            <tr>
+                <td><h5>
+                    banner图片
+                    <span style="font-size: 14px;color:#999;margin-left: 20px;">*必填,1张</span>
+                </h5>
+                    <div >
+                        {{#if bannerInfo.Image}}
+                            {{img-loader classNames="thumb thumb-x2 " tagName="div" original=(file-path bannerInfo.Image) onClick=(action "showFullImage" (file-path bannerInfo.Image))}}
+                        {{/if}}
+                    </div>
+                    <p></p>
+                    <button style="vertical-align: bottom;"
+                            class="button button-theme" {{action 'toggleMerchantPicUploadDialog' true}}>选择图片
+                    </button></td>
+            </tr>
+            <tr>
+                <td>banner类型</td>
+                <td>
+                    <select class="form-control" style="width: 180px"
+                            onchange={{action "bannerTypeChange" value="target.value"}}>
+                        <option value="商品">选择</option>
+                        {{#each bannerTypes as |type|}}
+                            {{#if (eq bannerInfo.Type type.value)}}
+                                <option selected value={{type.value}}>{{type.desc}}</option>
+                            {{else}}
+                                <option value={{type.value}}>{{type.desc}}</option>
+                            {{/if}}
+                        {{/each}}
+                    </select>
+                </td>
+                <td>必填</td>
+            </tr>
+            <tr>
+                <td>链接</td>
+                {{#if  (eq bannerInfo.Type "商品")}}
+                    <td>
+                        {{input value=searchString input=(action 'fuzzySearch') class="form-control form-control-block"}}
+                    </td>
+                    <td>
+                        {{#if goodsList}}
+                            <select class="form-control" style="width: 180px" onchange={{action "goodsChange" value="target.value"}}>
+                                <option >请选择</option>
+                                {{#each goodsList as |type|}}
+                                    <option value={{type.value}}>{{type.name}}</option>
+                                {{/each}}
+                        </select>
+                        {{/if}}
+                    </td>
+                {{else}}
+                    <td>{{input value = bannerInfo.Link  class="form-control form-control-block"}}</td>
+                {{/if}}
+            </tr>
+        </table>
+    </div>
+    <br>
+    <button class="button button-theme button-big"  {{action "submit"}}>
+        {{#if isSubmiting}}
+            <i class="fa fa-spin fa-spinner"></i>
+        {{else}}
+            提交
+        {{/if}}
+    </button>
+    <button class="button button-big" {{action "reset"}}>重置数据</button>
+</div>
+{{file-uploader onUploaded=(action "merchantPicUploaded") multiple=true show=isShowImg}}

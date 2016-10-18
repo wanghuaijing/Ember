@@ -5,6 +5,12 @@
             <label class="form-label">关键字:</label>
             {{input type="text" value=keyword placeholder="商品名称/编号" class="form-control"}}
         </div>
+        <div class="form-group form-inline">
+            <label class="form-label">有效时间:</label>
+            {{date-picker dateValue=validDate.[0]}}
+            至
+            {{date-picker dateValue=validDate.[1]}}
+        </div>
         <button class="button button-theme" {{action "search"}}>查询</button>
         {{#link-to "main.shop.goodsdetail" (query-params type="add" goodsID=-1 CategoryID=-1) class="button pull-right"}}
             <i class="fa fa-plus"></i>
@@ -25,6 +31,9 @@
                 <th class="text-left">
                     名称
                 </th>
+                <th class="text-left">
+                    优先级
+                </th>
                 <th class="text-center">
                     编号
                 </th>
@@ -34,7 +43,7 @@
                 <th>操作</th>
             </tr>
             </thead>
-            {{#each pageDataList as |data|}}
+            {{#each pageDataList as |data key|}}
                 <tr>
                     <td style="width: 110px;">
                         {{img-loader classNames="thumb thumb-x2" original=(file-path data.Photo 1)}}
@@ -45,11 +54,15 @@
                     <td>
                         {{data.Name}}
                     </td>
+                    <td onclick={{action "isEditChange" key}} style="cursor:pointer">
+                        {{input class="size-min"  value=data.HotOrder placeholder="未设置" focusOut=(action "hotOrderChange" data key)}}
+
+                    </td>
                     <td>
                         {{data.No}}
                     </td>
                     <td class="text-center">{{data.BeginTime}} - {{data.EndTime}}</td>
-                    <td class="text-center">{{data.MinPrimePrice}} - {{data.MaxPrimePrice}}</td>
+                    <td class="text-center">{{data.MinOrigiPrice}} - {{data.MaxOrigiPrice}}</td>
                     <td class="text-center">{{data.MinSellPrice}} - {{data.MaxSellPrice}}</td>
                     <td class="text-center">
                         {{#link-to "main.shop.goodsdetail" (query-params goodsID=data.ID type="detail"

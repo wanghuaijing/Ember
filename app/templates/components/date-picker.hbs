@@ -1,13 +1,13 @@
 {{input type="text" value=dateValue class="form-control datepicker-input" placeholder=placeholder}}
 <span class="icon fa fa-calendar"></span>
 {{#drop-menu onOpen=(action "pickerOpen")}}
-    <div onclick={{action "cancelPropagation"}} class="date-picker-container">
+    <div class="date-picker-container" onclick={{action "cancelPropagation"}} >
         <div class="date-picker-header">
-            <div class="year"><span onclick={{action "addYear" 1}} class="arrow-up"></span>{{currentYear}}<span
+            <div class="year"><span class="arrow-up" onclick={{action "addYear" 1}} ></span>{{currentYear}}<span
                     class="arrow-down" onclick={{action "addYear" -1}} ></span></div>
             年
-            <div class="month"><span onclick={{action "addMonth" 1}} class="arrow-up"></span>{{currentMonth}}<span
-                    onclick={{action "addMonth" -1}} class="arrow-down"></span></div>
+            <div class="month"><span class="arrow-up" onclick={{action "addMonth" 1}} ></span>{{currentMonth}}<span
+                    class="arrow-down"       onclick={{action "addMonth" -1}} ></span></div>
             月
         </div>
         <table class="date-picker-date-chooser">
@@ -26,8 +26,8 @@
             {{#each showDates as |week|}}
                 <tr>
                   {{#each week as |date|}}
-                      <td onclick={{action "dateTimeChange" date.timeStamp}}
-                                  class="{{unless date.thisMonth 'fade'}} {{if date.active "active"}}">
+                      <td class="{{unless date.thisMonth 'fade'}} {{if date.active "active"}}"
+                          onclick={{action "dateTimeChange" date.timeStamp}}>
                           <div>{{date.text}}</div>
                       </td>
                   {{/each}}
@@ -35,6 +35,11 @@
             {{/each}}
             </tbody>
         </table>
+        <div style="padding: 10px">
+            {{input value=currentTime class="date-picker date-time" type="time" focusOut=(action "inputChange") }}<span style="margin: 0 3px">分</span>
+            {{input value=currentSecond class="date-picker date-second size-min" max=59 min=0 type="number" focusOut=(action "secondChange")}}
+            <span style="margin-left: 3px">秒</span>
+        </div>
     </div>
 {{/drop-menu}}
 {{yield}}

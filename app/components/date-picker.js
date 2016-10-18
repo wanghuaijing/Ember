@@ -10,7 +10,9 @@ let copyDate = function (date) {
   }
   return new Date(date.getTime());
 };
-
+let fixZero = function(num, n){
+  return (Array(n).join(0) + num).slice(-n);
+};
 let isSameDate = function (d1, d2) {
   if (d1.getFullYear() === d2.getFullYear()
     && d1.getMonth() === d2.getMonth()
@@ -24,7 +26,9 @@ let formatDate = function (date) {
   if (!(typeof date === 'date')) {
     date = new Date(date);
   }
-  return [date.getFullYear(), (date.getMonth() + 1), date.getDate()].join('-');
+  return [date.getFullYear(), (date.getMonth() + 1), date.getDate()].join('-')
+      +" "+[fixZero(date.getHours(),2),fixZero(date.getMinutes(),2)].join(':')+':'
+      +fixZero(date.getSeconds(),2);
 };
 
 export default Ember.Component.extend({
@@ -118,6 +122,18 @@ export default Ember.Component.extend({
     }
     return arranged;
   }),
+  currentTime:Ember.computed('value',function(){
+    if(!this.get('value')){
+      return;
+    }
+    return fixZero(this.get('value').getHours(),2)+':'+fixZero(this.get('value').getMinutes(),2)
+  }),
+  currentSecond:Ember.computed('value',function(){
+    if(!this.get('value')){
+      return;
+    }
+    return fixZero(this.get('value').getSeconds(),2)
+  }),
   actions: {
     dateTimeChange(val, e){
       let date = new Date(val);
@@ -129,7 +145,6 @@ export default Ember.Component.extend({
       e.stopPropagation();
     },
     addYear(val){
-      console.log(this.get('value'));
       let date = copyDate(this.get('value'));
       this.set('value', new Date(date.setFullYear(date.getFullYear() + val)));
     },
@@ -158,7 +173,28 @@ export default Ember.Component.extend({
       }
     },
     inputChange(e){
-      console.log(e);
+      let date = copyDate(this.get('value'));
+      let result = new Date();
+      if(e.target.value){
+        let value = e.target.value.split(':');
+        result = new Date(date.setHours(value[0]));
+        result = new Date(result.setMinutes(value[1]));
+      }else {
+        result = new Date(date.setHours('00'));
+        result = new Date(date.setMinutes('00'))
+      }
+      this.set('dateValue', formatDate(result));
+    },
+    secondChange(e){
+      let date = copyDate(this.get('value'));
+      let result = new Date();
+      if(e.target.value){
+        let value = fixZero(e.target.value,2);
+        result = new Date(date.setSeconds(value));
+      }else {
+        result = new Date(date.setSeconds('00'));
+      }
+      this.set('dateValue', formatDate(result));
     }
   }
 });

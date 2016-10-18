@@ -38,28 +38,26 @@ export default Ember.Controller.extend({
         this.get('pageRequest')[1].request.abort();
       }
       let that = this;
-
+      that.set('addTemplateData',{});
+      that.set('stocks',[]);
+      that.set('tableData',null)
+      let goodsDataSource = {
+        Shop: {ID: config.SelfShopID},
+        CustoService:{
+          CustomerServicePhone:''
+        }
+      };
+      this.set('goodsDataSource',goodsDataSource)
       if (this.get('isAdd')) {
         if (!cache) {
-          that.set('goodsData', {
-            Shop: {ID: config.SelfShopID},
-            CustoService:{
-              CustomerServicePhone:''
-            }
-          });
+          that.set('goodsData', goodsDataSource);
           that.set('picsArr', []);
-          that.set('goodsDataSource', JSON.stringify({}));
         }
         else {
-          that.set('goodsData', $.extend({},cache, {
-            Shop: {ID: config.SelfShopID},
-            CustoService:{
-              CustomerServicePhone:''
-            }
-          }));
-          that.set('picsArr', cache.Pics ? cache.Pics.split('|') : []);
+          that.set('goodsData', $.extend({},cache, goodsDataSource));
+          that.set('picsArr', cache.Banner ? cache.Banner.split('|') : []);
         }
-        return;
+        return true;
       }else{
         let CategoryID = this.get('CategoryID');
         let goodsID = this.get('goodsID');
@@ -103,19 +101,23 @@ export default Ember.Controller.extend({
                       that.set('stocks',goodsData.StockPriceConfig);
                       that.set('tableData',goodsData.StockPriceConfig);
                       that.set('isLoading',false);
-                      that.set('picsArr', goodsData.Pics ? goodsData.Pics.split('|') : []);
+                      that.set('picsArr', goodsData.Banner ? goodsData.Banner.split('|') : []);
                       /*                    let resData = res.Data
                        resData.SpecialAttribute =res.Data.SpecialAttribute.map(function(item,index){
                        item.checked = false;
                        return item*/
                     })
-                    .catch(function(res){
-                  console.log(res)
+                    .catch(function(error){
+                      if (!error.abort) {
+                        that.get('messager').alert(error.msg);
+                      }
                 })
               })
             })
-            .catch(function(res){
-              console.log(res)
+            .catch(function(error){
+              if (!error.abort) {
+                that.get('messager').alert(error.msg);
+              }
             })
       }
 /*
@@ -162,10 +164,10 @@ export default Ember.Controller.extend({
           this.set('picsArr', []);
         }
         else {
-          let goodsSource = JSON.parse(this.get('goodsDataSource'));
+          let goodsSource =this.get('goodsDataSource')
           this.set('goodsData', goodsSource);
           this.get('editor').html(goodsSource.Content);
-          this.set('picsArr', goodsSource.Pics.split('|'));
+          this.set('picsArr', '');
         }
       },
       toggleBigPhotoUploadDialog(val){
@@ -185,11 +187,11 @@ export default Ember.Controller.extend({
       },
       picsUploaded(val){
         this.get('picsArr').pushObjects(val.split('|'));
-        this.set('goodsData.Pics', this.get('picsArr').join('|'))
+        this.set('goodsData.Banner', this.get('picsArr').join('|'))
       },
       deletePics(index){
         this.get('picsArr').removeAt(index);
-        this.set('goodsData.Pics', this.get('picsArr').join('|'))
+        this.set('goodsData.Banner', this.get('picsArr').join('|'))
       }
     }
   })
@@ -202,7 +204,7 @@ export default Ember.Controller.extend({
       }
       if (!data.Name || !data.Name.trim()
         || !data.No || !data.No.trim()
-        || !data.Pics || !data.Pics.trim()
+        || !data.Banner || !data.Banner.trim()
           || !data.CustoService.CustomerServicePhone|| !data.CustoService.CustomerServicePhone.trim()) {
         this.get('messager').alert('商品信息不能为空');
         return false;
@@ -286,7 +288,6 @@ export default Ember.Controller.extend({
         this.set('goodsData.SpeciAttriDetail',SpeciAttriDetail);
         this.set('goodsData.PurchAttriDetail',PurchAttriDetail);
         let goodsData = this.get('goodsData');
-        console.log(goodsData)
         this.set('goodsData',goodsData)
         that.set('goodsData.Content', this.get('editor').html());
         that.set('goodsData.Brief', this.get('editor').text().replace(/<(img|embed)[^<]*\/>/g, '').trim());
@@ -303,8 +304,8 @@ export default Ember.Controller.extend({
           .then(function () {
             that.get('messager').alert('操作成功');
             that.get('goodsController').load();
-            that.get('cacheFactory').addOrUpdate('newGoodsCache', {});
             if (that.get('isAdd')) {
+              that.get('cacheFactory').addOrUpdate('newGoodsCache', that.get('goodsData'));
               window.history.go(-1);
             }
           })
@@ -319,13 +320,43 @@ export default Ember.Controller.extend({
   })
   .reopen({
     showInsertContentPicDialog: false,
+    imgLazyLoad: Ember.inject.service('img-lazy-load'),
     actions: {
       toggleContentPicUploadDialog(value){
         this.set('showInsertContentPicDialog', value);
       },
       contentPicUploaded(val){
-        let imgSrc = this.get('http').get('host') + '/file?pid=' + val;
-        this.get('editor').insertHtml(`<img data-tag="img" src="${imgSrc}" />`);
+        //获取content的图片ID
+        let pics = this.get('goodsData.Pics');
+        if (pics) {
+          pics = pics + '|' + val
+        } else {
+          pics = val
+        }
+        ;
+        this.set('goodsData.Pics', pics);
+        let vals = val.split('|');
+        let that = this;
+        vals.map((item)=> {
+          var imgSrc = this.get('http').get('host') + '/file?pid=' + item;
+          this.get('imgLazyLoad')(imgSrc, ()=> {
+            that.get('editor').insertHtml(`<img data-tag="img" src="${imgSrc}" />`)
+          })
+          /* var img = new Image();
+           var $img = Ember.$(img)
+           $img.one('load',function () {
+           that.get('editor').insertHtml(`<img data-tag="img" src="${imgSrc}" />`);
+           $img.off('error');
+           $img = null;
+           img = null;
+           });
+           $img.one('error',function(){
+           img.src=imgSrc
+           });
+           img.src=imgSrc
+           })*/
+
+        })
       }
     }
   })
@@ -366,12 +397,16 @@ export default Ember.Controller.extend({
                         });
                         that.set('addTemplateData',resData)
                       })
-                      .catch(function(res){
-                        console.log(res)
+                      .catch(function(error){
+                        if (!error.abort) {
+                          that.get('messager').alert(error.msg);
+                        }
                       })
                 })
-                .catch(function(res){
-                  console.log(res)
+                .catch(function(error){
+                  if (!error.abort) {
+                    that.get('messager').alert(error.msg);
+                  }
                 })
           }
         },
@@ -447,10 +482,12 @@ export default Ember.Controller.extend({
       tableHead:Ember.computed('stocks.[]',function(){
         let stocks = this.get('stocks')[0];
         let tableHead = [];
-        for(var key in stocks.AttributesContent){
-          tableHead.push(key);
+        if(stocks){
+          for(var key in stocks.AttributesContent){
+            tableHead.push(key);
+          }
         }
-        tableHead.push('库存','卖价','市场价');
+        tableHead.push('库存','原价','现价');
         return tableHead;
       }),
       seTableData(data){
@@ -471,7 +508,6 @@ export default Ember.Controller.extend({
           }
           list.push(obj);
         });
-        console.log(list  )
         return list;
       },
       actions:{

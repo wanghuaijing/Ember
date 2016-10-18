@@ -25,25 +25,25 @@ export default Ember.Mixin.create({
             let result = false;
             switch (true){
                 case value instanceof Array:
-                    if(value.length<rule[1]&&value.length>rule[0]){
+                    if(value.length<=rule[1]&&value.length>rule[0]){
                         result = true;
                     }
                     break;
                 case value instanceof String:
                     var string = value.split('|');
                     if(string.length>1){
-                        if(string.length<rule[1]&&string.length>rule[0]){
+                        if(string.length<=rule[1]&&string.length>rule[0]){
                             result = true;
                         }
                     }else {
-                        if(value.length<rule[1]&&value.length>rule[0]){
+                        if(value.length<=rule[1]&&value.length>rule[0]){
                             result = true;
                         }
                     };
                     break;
                 case typeof value == 'number':
                     var stringN = value.toString(10);
-                    if(stringN.length<rule[1]&&stringN.length>rule[0]){
+                    if(stringN.length<=rule[1]&&stringN.length>rule[0]){
                         result = true;
                     }
             }
@@ -79,7 +79,10 @@ export default Ember.Mixin.create({
         return 0
     },
     //创建查找的对象
-    createData(name,val,type,rule){
+    createData(obj,val){
+        let name = obj.name,
+            type = obj.type,
+            rule = obj.rule;
         let getResult = null;
         if(type=='exist'){
             getResult = function(that){
@@ -101,10 +104,10 @@ export default Ember.Mixin.create({
         return o;
     },
     //添加入验证数组
-    addObj(name,val,type,rule){
-        let obj = this.get('createData')(name,val,type,rule)
+    addObj(obj,val){
+        let o= this.get('createData')(obj,val)
         let formDataList = this.get('formDataList');
-        formDataList.push(obj);
+        formDataList.push(o);
         this.set('formDataList',formDataList);
     },
     //获得单个验证结果

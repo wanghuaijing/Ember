@@ -175,17 +175,17 @@
                                 class="form-control special" }}
                             </td>
                             <td class="text-center">
-                                {{#if (toboolean isExistGoods)}}
-                                    {{#if (toboolean data.IsNew)}}
+                                {{#if (toboolean data.IsNew) }}
+                                    {{#if (toboolean isExistGoods) }}
+                                        <button class="button button-default"
+                                        >删除</button>
+                                    {{else}}
                                         <button class="button button-danger"
                                                 onclick={{action 'purchaseDelete'  data.key}}>删除</button>
-                                    {{else}}
-                                        <button class="button button-default"
-                                                >删除</button>
                                     {{/if}}
                                 {{else }}
-                                    <button class="button button-danger"
-                                            onclick={{action 'purchaseDelete'  data.key}}>删除</button>
+                                    <button class="button button-default"
+                                            >删除</button>
                                 {{/if}}
                             </td>
 

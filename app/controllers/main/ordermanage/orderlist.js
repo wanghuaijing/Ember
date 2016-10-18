@@ -69,7 +69,7 @@ export default Ember.Controller.extend(pagingDataMixin, {
         keyword: '',
         closeReason: '',
         closeReasons: Ember.computed('model', function () {
-            let model = this.get('model')
+            let model = this.get('model');
             let reasons = [];
             for (var key in model) {
                 reasons.push({
@@ -79,6 +79,12 @@ export default Ember.Controller.extend(pagingDataMixin, {
             }
             reasons.unshift({value: '', text: '不限原因'});
             return reasons;
+        }),
+        closeReasonsSelect:Ember.computed('closeReasons',function(){
+            let closeReasons = this.get('closeReasons');
+            closeReasons.pop();
+            closeReasons.pop();
+            return closeReasons
         }),
         goodsCategorys: Ember.computed('enum.goodsCategory',function(){
             let goodsCategory = this.get('enum.goodsCategory');
@@ -103,7 +109,6 @@ export default Ember.Controller.extend(pagingDataMixin, {
         }),
         actions: {
             orderTypeChange: function (type) {
-                console.log(type)
                 this.set('orderType', type * 1);
             },
             closeReasonChange: function (type) {
@@ -167,10 +172,11 @@ export default Ember.Controller.extend(pagingDataMixin, {
                 if (that.get('isOrderDeleting')) {
                     return;
                 }
-
+                let reasonValue = that.get('deleteReason');
+                let reasonText = this.get('closeReasons').findBy('value',reasonValue).text;
                 that.set('isOrderDeleting', true);
                 that.get('http')
-                    .request(`/Mall2/Order/Cancel/Admin?id=${that.get('deletingOrder').ID}&why=${that.get('deleteReason')}`, {
+                    .request(`/Mall2/Order/Cancel/Admin?id=${that.get('deletingOrder').ID}&code=${reasonValue}&why=${reasonText}`, {
                         type: 'delete'
                     })
                     .then(function () {
@@ -369,7 +375,6 @@ export default Ember.Controller.extend(pagingDataMixin, {
             let that = this;
             let shippingNum = order.ShippingNum;
             let shippingType = this.get('shippingType');
-            console.log(shippingType)
             this.get('http').request(`/Mall2/Order/Shipping?deliveryNo=${shippingNum}`)
                 .then(function(res){
                     res.Data.OrderNo = order.OrderNo;

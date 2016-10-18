@@ -18,7 +18,8 @@ export default Ember.Controller.extend(pagingDataMixin,{
             that.loadPageBegin(page);
             let url = '/Mall2/Banner/Admin';
             let params = {
-                type: that.get('bannerType')
+                type: that.get('bannerType'),
+                seq: that.get('seq')
             };
             let promises = [that.get('http')
                 .request(url, {
@@ -39,7 +40,6 @@ export default Ember.Controller.extend(pagingDataMixin,{
             Ember.RSVP.all(promises)
                 .then(function (values) {
                     that.loadPageComplete(values[1].Count, values[0].Data);
-                    console.log(values[0].Data)
                 })
                 .catch(function (error) {
                     if (!error.abort) {
@@ -54,6 +54,10 @@ export default Ember.Controller.extend(pagingDataMixin,{
         return this.get('enum').bannerType
     }),
     bannerType:null,
+    seq:null,
+    seqTypes:Ember.computed('enum.bannerSeq',function(){
+        return this.get('enum').bannerSeq
+    }),
     actions: {
         deleteClick(id){
             let that = this;
@@ -76,5 +80,12 @@ export default Ember.Controller.extend(pagingDataMixin,{
         bannerTypeChange(value){
             this.set('bannerType',value);
         },
+        sepChange(value){
+            if(value==0){
+                this.set('seq',null)
+            }else {
+                this.set('seq',value)
+            }
+        }
     }
 })

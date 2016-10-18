@@ -48,7 +48,7 @@
     <h4>订单<span class="text-danger">{{deletingOrder.OrderNum}}</span>取消后，将会被关闭，不能再进行其他操作！请谨慎操作!</h4>
     <p>请选择关闭原因:</p>
     <ul class="ul-list">
-        {{#each closeReasons as |reason i|}}
+        {{#each closeReasonsSelect as |reason i|}}
             {{#if reason.value}}
                 <li onclick={{action "deleteReasonChange" reason.value}} class={{if (eq deleteReason reason.value) "active"}}>
                     <input type="radio" name="deleteReason"

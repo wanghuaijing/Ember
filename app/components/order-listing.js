@@ -12,7 +12,7 @@ export default Ember.Component.extend({
       return false
     }else {
       if(orderTypes.NOT_PAYED&&orderTypes.NOT_OUT_TICKET){
-        return status === orderTypes.NOT_PAYED.value || status === orderTypes.NOT_OUT_TICKET.value;
+        return status === orderTypes.NOT_PAYED.value;
       }else {
         return false
       }
