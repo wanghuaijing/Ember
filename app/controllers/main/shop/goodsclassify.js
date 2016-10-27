@@ -436,4 +436,22 @@ export default Ember.Controller.extend(pagingDataMixin,{
                 this.addLoad(data)
             }
         }
-})
+}).reopen({
+        picsUploadDialog:false,
+        actions:{
+            togglePicsUploadDialog(picsUploadDialog){
+                this.set('picsUploadDialog',picsUploadDialog)
+            },
+            deletePics(){
+                this.set('template.Image','')
+            },
+            showFullImage(src){
+                window.open(src.replace(/&quality.+/g, ''));
+            },
+            picsUploaded(value){
+                console.log(value)
+                this.set('template.Image',value);
+                this.set('templateEdit.Image',value)
+            }
+        }
+    })

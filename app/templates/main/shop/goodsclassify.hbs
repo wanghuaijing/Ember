@@ -64,6 +64,23 @@
                 </tr>
                 <tr>
                     <td class="label">
+                        图片
+                    </td>
+                    <td>
+                        <div style="display: inline-block;position: relative;">
+                            {{#if template.Image}}
+                                {{img-loader classNames="thumb thumb-x2" tagName="div" original=(file-path template.Image) onClick=(action "showFullImage" (file-path template.Image))}}
+                                <div class="text-center"><span
+                                        class="cursor-pointer" {{action "deletePics"}}>&times;</span></div>
+                            {{/if}}
+                        </div>
+                        <button style="vertical-align: bottom; display: inline-block"
+                                class="button button-theme" {{action 'togglePicsUploadDialog' true}}>选择图片
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
                         备注
                     </td>
                     <td>
@@ -83,6 +100,23 @@
                 </td>
                 <td>
                     {{input class="form-control" value=templateEdit.Name }}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    图片
+                </td>
+                <td>
+                    <div style="display: inline-block;position: relative;">
+                        {{#if templateEdit.Image}}
+                            {{img-loader classNames="thumb thumb-x2" tagName="div" original=(file-path templateEdit.Image) onClick=(action "showFullImage" (file-path templateEdit.Image))}}
+                            <div class="text-center"><span
+                                    class="cursor-pointer" {{action "deletePics"}}>&times;</span></div>
+                        {{/if}}
+                    </div>
+                    <button style="vertical-align: bottom; display: inline-block"
+                            class="button button-theme" {{action 'togglePicsUploadDialog' true}}>选择图片
+                    </button>
                 </td>
             </tr>
             <tr>
@@ -129,6 +163,23 @@
             </tr>
             <tr>
                 <td class="label">
+                    图片
+                </td>
+                <td>
+                    <div style="display: inline-block;position: relative;">
+                        {{#if template.Image}}
+                            {{img-loader classNames="thumb thumb-x2" tagName="div" original=(file-path template.Image) onClick=(action "showFullImage" (file-path template.Image))}}
+                            <div class="text-center"><span
+                                    class="cursor-pointer" {{action "deletePics"}}>&times;</span></div>
+                        {{/if}}
+                    </div>
+                    <button style="vertical-align: bottom; display: inline-block"
+                            class="button button-theme" {{action 'togglePicsUploadDialog' true}}>选择图片
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
                     备注
                 </td>
                 <td>
@@ -139,3 +190,5 @@
         </table>
     {{/modal-dialog}}
 </div>
+{{file-uploader  onUploaded=(action "picsUploaded") multiple=false
+show=picsUploadDialog}}

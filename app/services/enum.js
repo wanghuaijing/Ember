@@ -136,5 +136,11 @@ export  default Ember.Service.extend({
       value:5,
       desc:'顺序为5'
     }
-  ]
+  ],
+  activityEnum:{
+    1:'新用户注册',
+    2:'首单购买'
+
+
+  }
 });

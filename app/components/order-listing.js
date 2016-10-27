@@ -1,8 +1,20 @@
 import Ember from 'ember';
-
+import ENV from '../config/environment';
 export default Ember.Component.extend({
   classNames: ['order-view'],
   enum: Ember.inject.service(),
+  activityType:Ember.computed('order',function(){
+    let ActivityType = this.get('order').ActivityType;
+    console.log(ActivityType)
+    if(ActivityType){
+      let ActivityTypes = this.get('enum').activityEnum;
+      return ActivityTypes[ActivityType];
+    }
+    return ''
+  }),
+  isActivity:Ember.computed('order',function(){
+    return ENV.APP.isActivity
+  }),
   showCancel: Ember.computed('order', function () {
     if(!this.get('order'))return;
     let status = this.get('order').OrderStatus;
